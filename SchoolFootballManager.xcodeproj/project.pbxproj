@@ -1,0 +1,643 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0134AD2F49047C16ED0077D3 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F5309FA37FD9204739AB0A4E /* FirebaseStorage */; };
+		18DFEAAC98F9F11981014BF4 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1553376D18CBB6095349694 /* RootView.swift */; };
+		271800731CC3653D1C5AC613 /* CarpoolBooking.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */; };
+		30FED06B9A922B86C45C474F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */; };
+		3BC109C597BB99DBD445AFD4 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A44E3E0C12F0DEB670DDFBF /* EventsView.swift */; };
+		3F484CFA85CCA59856F492CB /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E82981AA02F38CEF91AC1C /* EventService.swift */; };
+		4616027536BB67D1B5971F7B /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8E00B8D86F1B881FFEE2A1 /* Team.swift */; };
+		47ECDDB1E5F8F99699AECCA8 /* Carpool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B9B4200926651705358CB /* Carpool.swift */; };
+		49666A3F4A74DAD0E434F3EB /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073C59D80AB7CBE46F16ABF0 /* LoadingOverlay.swift */; };
+		5425BC7AAB43FA534F41C699 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE894B5A1FA7FBD6BE3BDB3E /* AuthService.swift */; };
+		547216CD874A97FD39231D3C /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8243EF1903BA2BCBA15B8C /* EmptyStateView.swift */; };
+		55B46945798D7E318356999F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834046745235CD586095635C /* LoginView.swift */; };
+		582CE6A03ABEF7F7A7B908B0 /* PlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFB71B5A7ED6CCE57C0CD7B /* PlayersView.swift */; };
+		5846CF79E0340B86FBB8E8C3 /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6573CC86FFE07B52D575733 /* PlayerService.swift */; };
+		5AB1F4206D7EBE5D0F1B7C87 /* UserApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB9A2171252663903448587 /* UserApprovalView.swift */; };
+		60948446910C6D21600FD2B9 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE7F06BAF46A57EF1FC47AB /* FirebaseMessaging */; };
+		60D672961A043ED7449FD131 /* MatchRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2CBBA13162E6CE424E5C03 /* MatchRecord.swift */; };
+		60FBED04B8250FF269719523 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8591B798D9776DD914A0D528 /* Date+Extensions.swift */; };
+		6A2163F7ADEC6EC0A947D121 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3776886F345A73FEBE208 /* Event.swift */; };
+		710010BD0CBDB83D0838111A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6E9CAF7A1F2F9450AF9D4B /* AppDelegate.swift */; };
+		78B3BEEABC76443D79C32E87 /* PlayerAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4037B4D2017DBD821900A /* PlayerAvatarView.swift */; };
+		828B32571E5BC03F30DF42DC /* StatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78898130145F8DB17ED3489 /* StatsService.swift */; };
+		858771524E8A8C8423C15A77 /* AdminDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63859CE5B048DD3EA4F13FBC /* AdminDashboardView.swift */; };
+		878804A0357E5EAAA5A36D6A /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3741576344AF261BB6968E /* NotificationService.swift */; };
+		88A9E4C1C85160644FB7DEC4 /* CarpoolService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B6A20ADDB35E8216DF2C4F /* CarpoolService.swift */; };
+		9924378E6202AA8A63702E82 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A0D6745539CE3DEA7017FA /* Player.swift */; };
+		99589FEC793ECAB493126952 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE34749EDE268DDB0B213D6A /* FirebaseFirestoreSwift */; };
+		9DF01A467414BB058DAF37C9 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F93B59DAE12DAAC788D2F5 /* AppState.swift */; };
+		A832CD2A4F6C3DFC71CBB92E /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E693A9DC5A030AD2BE5A242B /* StatsView.swift */; };
+		A832CE024DA483383FC26755 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5ABC2A1F730775C894DE983A /* FirebaseAuth */; };
+		B33B92D072E3D0722C005A66 /* SchoolFootballManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435FA46FCC651611F0F082D5 /* SchoolFootballManagerApp.swift */; };
+		B64985503EFA12E149D2D170 /* StatBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B669D97B2C46D487F80B0E1F /* StatBadgeView.swift */; };
+		CA8ECEA3F2D04511292E57CC /* ManagerDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B36A1A75917634131FBF46 /* ManagerDashboardView.swift */; };
+		CC8FF5539E034BE63345ACD7 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9664419643EFA58A4EFCD675 /* AppUser.swift */; };
+		D386E7D91F1B16E27D74110F /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B39B093D06F576635B81C86 /* View+Extensions.swift */; };
+		D3DED2A959B902149D0F4C56 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779A4DE9ADF2F1DFC34B5DF /* Color+Extensions.swift */; };
+		DAD7E27579124F400609A36E /* ParentDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F13E39FC4BE7F3FC1434D4 /* ParentDashboardView.swift */; };
+		DD2AB9507E7A48B7FAC203AC /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17410AD5B7320F462825A77 /* RegisterView.swift */; };
+		DEADB6CB35706ACD943D11C9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CBC80668131926B4D346ADAB /* FirebaseFirestore */; };
+		E7869312B5E8785DC9423E9E /* EventRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DAE805A1D19B91CC6D4BAE /* EventRowView.swift */; };
+		E992AF9EB5BAEC2E8E62A336 /* CarpoolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEFB7F250CEF948FDB8B4 /* CarpoolView.swift */; };
+		F59958C8B5648B52830B1FE8 /* PlayerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B9D5EE2F08F9010F5AD2F /* PlayerStats.swift */; };
+		FF6E7EB6C3A16E12AD1730F5 /* EventRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3009EE774C0B330284CC5A61 /* EventRegistration.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03FCEFB7F250CEF948FDB8B4 /* CarpoolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolView.swift; sourceTree = "<group>"; };
+		04F4037B4D2017DBD821900A /* PlayerAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAvatarView.swift; sourceTree = "<group>"; };
+		073C59D80AB7CBE46F16ABF0 /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
+		1B39B093D06F576635B81C86 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		2A8B9B4200926651705358CB /* Carpool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Carpool.swift; sourceTree = "<group>"; };
+		3009EE774C0B330284CC5A61 /* EventRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventRegistration.swift; sourceTree = "<group>"; };
+		3DFB71B5A7ED6CCE57C0CD7B /* PlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersView.swift; sourceTree = "<group>"; };
+		435FA46FCC651611F0F082D5 /* SchoolFootballManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolFootballManagerApp.swift; sourceTree = "<group>"; };
+		44F93B59DAE12DAAC788D2F5 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		47A3776886F345A73FEBE208 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		4C8E00B8D86F1B881FFEE2A1 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		63859CE5B048DD3EA4F13FBC /* AdminDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminDashboardView.swift; sourceTree = "<group>"; };
+		6D6E9CAF7A1F2F9450AF9D4B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7AB9A2171252663903448587 /* UserApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApprovalView.swift; sourceTree = "<group>"; };
+		834046745235CD586095635C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		8591B798D9776DD914A0D528 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		92F13E39FC4BE7F3FC1434D4 /* ParentDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentDashboardView.swift; sourceTree = "<group>"; };
+		9664419643EFA58A4EFCD675 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
+		9779A4DE9ADF2F1DFC34B5DF /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
+		9A44E3E0C12F0DEB670DDFBF /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
+		9F2CBBA13162E6CE424E5C03 /* MatchRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRecord.swift; sourceTree = "<group>"; };
+		A00305D541EEAAC7894C9F44 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A17410AD5B7320F462825A77 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		A1B36A1A75917634131FBF46 /* ManagerDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerDashboardView.swift; sourceTree = "<group>"; };
+		A6573CC86FFE07B52D575733 /* PlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
+		AE894B5A1FA7FBD6BE3BDB3E /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		B669D97B2C46D487F80B0E1F /* StatBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatBadgeView.swift; sourceTree = "<group>"; };
+		BF5B9D5EE2F08F9010F5AD2F /* PlayerStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStats.swift; sourceTree = "<group>"; };
+		BF8243EF1903BA2BCBA15B8C /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		C0B6A20ADDB35E8216DF2C4F /* CarpoolService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolService.swift; sourceTree = "<group>"; };
+		C1553376D18CBB6095349694 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		C6DAE805A1D19B91CC6D4BAE /* EventRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventRowView.swift; sourceTree = "<group>"; };
+		D78898130145F8DB17ED3489 /* StatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsService.swift; sourceTree = "<group>"; };
+		DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolBooking.swift; sourceTree = "<group>"; };
+		E3A0D6745539CE3DEA7017FA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		E4E82981AA02F38CEF91AC1C /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
+		E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SchoolFootballManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E693A9DC5A030AD2BE5A242B /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		FB3741576344AF261BB6968E /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E7A7B144CCF89E4E1B5F5937 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A832CE024DA483383FC26755 /* FirebaseAuth in Frameworks */,
+				DEADB6CB35706ACD943D11C9 /* FirebaseFirestore in Frameworks */,
+				99589FEC793ECAB493126952 /* FirebaseFirestoreSwift in Frameworks */,
+				0134AD2F49047C16ED0077D3 /* FirebaseStorage in Frameworks */,
+				60948446910C6D21600FD2B9 /* FirebaseMessaging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2072260ADAFF235D243F9178 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9664419643EFA58A4EFCD675 /* AppUser.swift */,
+				2A8B9B4200926651705358CB /* Carpool.swift */,
+				DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */,
+				47A3776886F345A73FEBE208 /* Event.swift */,
+				3009EE774C0B330284CC5A61 /* EventRegistration.swift */,
+				9F2CBBA13162E6CE424E5C03 /* MatchRecord.swift */,
+				E3A0D6745539CE3DEA7017FA /* Player.swift */,
+				BF5B9D5EE2F08F9010F5AD2F /* PlayerStats.swift */,
+				4C8E00B8D86F1B881FFEE2A1 /* Team.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		22F9E40C04D85BC72009FCB7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				DD571DF27556215623038429 /* SchoolFootballManager */,
+				A00305D541EEAAC7894C9F44 /* Info.plist */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		345B1988D0A652D8C7FCCC80 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				9A44E3E0C12F0DEB670DDFBF /* EventsView.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		3AC016FAFDC0D9A6275902AC /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */,
+				834046745235CD586095635C /* LoginView.swift */,
+				A17410AD5B7320F462825A77 /* RegisterView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		3D6D1FEA6EF297460F315F0A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AE894B5A1FA7FBD6BE3BDB3E /* AuthService.swift */,
+				C0B6A20ADDB35E8216DF2C4F /* CarpoolService.swift */,
+				E4E82981AA02F38CEF91AC1C /* EventService.swift */,
+				FB3741576344AF261BB6968E /* NotificationService.swift */,
+				A6573CC86FFE07B52D575733 /* PlayerService.swift */,
+				D78898130145F8DB17ED3489 /* StatsService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4FB2CD81A2EDF83CAD59B094 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6D6E9CAF7A1F2F9450AF9D4B /* AppDelegate.swift */,
+				435FA46FCC651611F0F082D5 /* SchoolFootballManagerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		56B0896B59FC4E3BB88560CD /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				59BBEE72B49752072D337EEA /* Extensions */,
+				2072260ADAFF235D243F9178 /* Models */,
+				3D6D1FEA6EF297460F315F0A /* Services */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		59BBEE72B49752072D337EEA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9779A4DE9ADF2F1DFC34B5DF /* Color+Extensions.swift */,
+				8591B798D9776DD914A0D528 /* Date+Extensions.swift */,
+				1B39B093D06F576635B81C86 /* View+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		637F1F096D12D4345529C141 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				E693A9DC5A030AD2BE5A242B /* StatsView.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		6CDDF080E7B0A0CE4A845882 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				63859CE5B048DD3EA4F13FBC /* AdminDashboardView.swift */,
+				A1B36A1A75917634131FBF46 /* ManagerDashboardView.swift */,
+				92F13E39FC4BE7F3FC1434D4 /* ParentDashboardView.swift */,
+				C1553376D18CBB6095349694 /* RootView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		C0E3C5F533EA716E57E5838F /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				7AB9A2171252663903448587 /* UserApprovalView.swift */,
+			);
+			path = Admin;
+			sourceTree = "<group>";
+		};
+		C4F960ED2835B6C7D4970781 = {
+			isa = PBXGroup;
+			children = (
+				22F9E40C04D85BC72009FCB7 /* Sources */,
+				D5BF404FD432A15724123AE6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D1BC81B58BFFB46C9DE19152 /* Carpool */ = {
+			isa = PBXGroup;
+			children = (
+				03FCEFB7F250CEF948FDB8B4 /* CarpoolView.swift */,
+			);
+			path = Carpool;
+			sourceTree = "<group>";
+		};
+		D5BF404FD432A15724123AE6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DD571DF27556215623038429 /* SchoolFootballManager */ = {
+			isa = PBXGroup;
+			children = (
+				4FB2CD81A2EDF83CAD59B094 /* App */,
+				56B0896B59FC4E3BB88560CD /* Core */,
+				E08E303250BEC9C323196003 /* Features */,
+				FC5140CD2CCBEE83F6616141 /* Shared */,
+			);
+			path = SchoolFootballManager;
+			sourceTree = "<group>";
+		};
+		E00623C0A55C5BBE5D362332 /* Players */ = {
+			isa = PBXGroup;
+			children = (
+				3DFB71B5A7ED6CCE57C0CD7B /* PlayersView.swift */,
+			);
+			path = Players;
+			sourceTree = "<group>";
+		};
+		E08E303250BEC9C323196003 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				C0E3C5F533EA716E57E5838F /* Admin */,
+				3AC016FAFDC0D9A6275902AC /* Auth */,
+				D1BC81B58BFFB46C9DE19152 /* Carpool */,
+				6CDDF080E7B0A0CE4A845882 /* Dashboard */,
+				345B1988D0A652D8C7FCCC80 /* Events */,
+				E00623C0A55C5BBE5D362332 /* Players */,
+				637F1F096D12D4345529C141 /* Stats */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		FC5140CD2CCBEE83F6616141 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				FC6FA32B3AF01D101F350A38 /* Components */,
+				44F93B59DAE12DAAC788D2F5 /* AppState.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		FC6FA32B3AF01D101F350A38 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BF8243EF1903BA2BCBA15B8C /* EmptyStateView.swift */,
+				C6DAE805A1D19B91CC6D4BAE /* EventRowView.swift */,
+				073C59D80AB7CBE46F16ABF0 /* LoadingOverlay.swift */,
+				04F4037B4D2017DBD821900A /* PlayerAvatarView.swift */,
+				B669D97B2C46D487F80B0E1F /* StatBadgeView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4E2DDF6093AAFFA53A73CBFC /* SchoolFootballManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47103DE0369BE25CD239DF7D /* Build configuration list for PBXNativeTarget "SchoolFootballManager" */;
+			buildPhases = (
+				0805F4DB2C4F49A36170DCBB /* Sources */,
+				E7A7B144CCF89E4E1B5F5937 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SchoolFootballManager;
+			packageProductDependencies = (
+				5ABC2A1F730775C894DE983A /* FirebaseAuth */,
+				CBC80668131926B4D346ADAB /* FirebaseFirestore */,
+				CE34749EDE268DDB0B213D6A /* FirebaseFirestoreSwift */,
+				F5309FA37FD9204739AB0A4E /* FirebaseStorage */,
+				0EE7F06BAF46A57EF1FC47AB /* FirebaseMessaging */,
+			);
+			productName = SchoolFootballManager;
+			productReference = E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7534DF5E75468CEA612C25EB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					4E2DDF6093AAFFA53A73CBFC = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 30FD853BD85219BA7C63F6A2 /* Build configuration list for PBXProject "SchoolFootballManager" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C4F960ED2835B6C7D4970781;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D5BF404FD432A15724123AE6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4E2DDF6093AAFFA53A73CBFC /* SchoolFootballManager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0805F4DB2C4F49A36170DCBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				858771524E8A8C8423C15A77 /* AdminDashboardView.swift in Sources */,
+				710010BD0CBDB83D0838111A /* AppDelegate.swift in Sources */,
+				9DF01A467414BB058DAF37C9 /* AppState.swift in Sources */,
+				CC8FF5539E034BE63345ACD7 /* AppUser.swift in Sources */,
+				5425BC7AAB43FA534F41C699 /* AuthService.swift in Sources */,
+				30FED06B9A922B86C45C474F /* AuthViewModel.swift in Sources */,
+				47ECDDB1E5F8F99699AECCA8 /* Carpool.swift in Sources */,
+				271800731CC3653D1C5AC613 /* CarpoolBooking.swift in Sources */,
+				88A9E4C1C85160644FB7DEC4 /* CarpoolService.swift in Sources */,
+				E992AF9EB5BAEC2E8E62A336 /* CarpoolView.swift in Sources */,
+				D3DED2A959B902149D0F4C56 /* Color+Extensions.swift in Sources */,
+				60FBED04B8250FF269719523 /* Date+Extensions.swift in Sources */,
+				547216CD874A97FD39231D3C /* EmptyStateView.swift in Sources */,
+				6A2163F7ADEC6EC0A947D121 /* Event.swift in Sources */,
+				FF6E7EB6C3A16E12AD1730F5 /* EventRegistration.swift in Sources */,
+				E7869312B5E8785DC9423E9E /* EventRowView.swift in Sources */,
+				3F484CFA85CCA59856F492CB /* EventService.swift in Sources */,
+				3BC109C597BB99DBD445AFD4 /* EventsView.swift in Sources */,
+				49666A3F4A74DAD0E434F3EB /* LoadingOverlay.swift in Sources */,
+				55B46945798D7E318356999F /* LoginView.swift in Sources */,
+				CA8ECEA3F2D04511292E57CC /* ManagerDashboardView.swift in Sources */,
+				60D672961A043ED7449FD131 /* MatchRecord.swift in Sources */,
+				878804A0357E5EAAA5A36D6A /* NotificationService.swift in Sources */,
+				DAD7E27579124F400609A36E /* ParentDashboardView.swift in Sources */,
+				9924378E6202AA8A63702E82 /* Player.swift in Sources */,
+				78B3BEEABC76443D79C32E87 /* PlayerAvatarView.swift in Sources */,
+				5846CF79E0340B86FBB8E8C3 /* PlayerService.swift in Sources */,
+				F59958C8B5648B52830B1FE8 /* PlayerStats.swift in Sources */,
+				582CE6A03ABEF7F7A7B908B0 /* PlayersView.swift in Sources */,
+				DD2AB9507E7A48B7FAC203AC /* RegisterView.swift in Sources */,
+				18DFEAAC98F9F11981014BF4 /* RootView.swift in Sources */,
+				B33B92D072E3D0722C005A66 /* SchoolFootballManagerApp.swift in Sources */,
+				B64985503EFA12E149D2D170 /* StatBadgeView.swift in Sources */,
+				828B32571E5BC03F30DF42DC /* StatsService.swift in Sources */,
+				A832CD2A4F6C3DFC71CBB92E /* StatsView.swift in Sources */,
+				4616027536BB67D1B5971F7B /* Team.swift in Sources */,
+				5AB1F4206D7EBE5D0F1B7C87 /* UserApprovalView.swift in Sources */,
+				D386E7D91F1B16E27D74110F /* View+Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		176A76FB5B7A79803804C6EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rinkan.schoolfootballmanager;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		54FA745FCE26B112523605E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.rinkan.schoolfootballmanager;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.10;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		71FAD9062ACBBEDE602C2BB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rinkan.schoolfootballmanager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		FABCB3BD1ADB2E1DECB9285D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rinkan.schoolfootballmanager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		30FD853BD85219BA7C63F6A2 /* Build configuration list for PBXProject "SchoolFootballManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71FAD9062ACBBEDE602C2BB5 /* Debug */,
+				FABCB3BD1ADB2E1DECB9285D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		47103DE0369BE25CD239DF7D /* Build configuration list for PBXNativeTarget "SchoolFootballManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				176A76FB5B7A79803804C6EF /* Debug */,
+				54FA745FCE26B112523605E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EE7F06BAF46A57EF1FC47AB /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		5ABC2A1F730775C894DE983A /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CBC80668131926B4D346ADAB /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		CE34749EDE268DDB0B213D6A /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+		F5309FA37FD9204739AB0A4E /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E77844CED950CAB2F73EAF3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 7534DF5E75468CEA612C25EB /* Project object */;
+}
