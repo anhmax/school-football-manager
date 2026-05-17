@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - Main View
+
 struct SheetImportView: View {
     @EnvironmentObject var settings: AppSettings
     @EnvironmentObject var eventStore: EventStore
@@ -7,354 +9,265 @@ struct SheetImportView: View {
 
     @StateObject private var sheets = SheetsService()
 
-    // Sheet selection
-    @State private var sheetNames: [String] = []
-    @State private var showManualInput = false   // fallback when getSheetNames unavailable
-    @State private var manualInput = "5月"
-    @State private var selectedSheet: String? = nil
-    @State private var loadingNames = false
-    @State private var namesError: String? = nil
+    // Input
+    @State private var monthName  = "5月"
+    @State private var rawRows:   [[String]] = []
+    @State private var inputError: String?
 
-    // Event loading
-    @State private var fetchedEvents: [SheetEvent] = []
-    @State private var selectedDates: Set<String> = []
-    @State private var loadingEvents = false
-    @State private var eventsError: String? = nil
+    // Mapping
+    @State private var mapping = ColumnMapping()
 
-    private var activeSheet: String {
-        showManualInput
-            ? manualInput.trimmingCharacters(in: .whitespaces)
-            : (selectedSheet ?? "")
+    // Results
+    @State private var events:        [SheetEvent] = []
+    @State private var selectedDates: Set<String>  = []
+
+    // Computed
+    private var colCount: Int { max((rawRows.max { $0.count < $1.count }?.count ?? 0), 14) }
+
+    private func colLabel(_ i: Int) -> String {
+        String(UnicodeScalar(65 + (i % 26))!)  // A, B, C …
+    }
+
+    private func colPreview(_ i: Int) -> String {
+        // first non-empty value in that column (skip header row)
+        let val = rawRows.dropFirst().first { i < $0.count && !$0[i].trimmingCharacters(in: .whitespaces).isEmpty }?[i] ?? ""
+        return String(val.prefix(10))
     }
 
     var body: some View {
         NavigationStack {
-            Group {
-                if !settings.isImportConfigured {
-                    notConfiguredView
-                } else {
-                    mainForm
-                }
+            Form {
+                pasteSection
+                if !rawRows.isEmpty { mappingSection }
+                if !events.isEmpty  { eventsSection   }
+                if !selectedDates.isEmpty { importSection }
             }
-            .navigationTitle("Sheetsからインポート")
+            .navigationTitle("データをインポート")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("閉じる") { dismiss() }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if loadingNames || loadingEvents {
-                        ProgressView().scaleEffect(0.8)
+                ToolbarItem(placement: .navigationBarLeading) { Button("閉じる") { dismiss() } }
+            }
+        }
+    }
+
+    // MARK: - ① Paste section
+
+    var pasteSection: some View {
+        Section {
+            HStack {
+                Text("月名（シート名）")
+                Spacer()
+                TextField("5月", text: $monthName)
+                    .multilineTextAlignment(.trailing)
+                    .autocorrectionDisabled()
+            }
+
+            Button {
+                loadFromClipboard()
+            } label: {
+                Label("クリップボードから読み込む", systemImage: "doc.on.clipboard")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.footballGreen)
+
+            if let err = inputError {
+                Label(err, systemImage: "xmark.circle")
+                    .font(.caption).foregroundColor(.statusError)
+                    .textSelection(.enabled)
+            }
+
+            if !rawRows.isEmpty {
+                Label("\(max(rawRows.count - 1, 0))行を読み込みました", systemImage: "checkmark.circle.fill")
+                    .font(.caption).foregroundColor(.statusSuccess)
+
+                // Preview first 2 data rows
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(rawRows.prefix(3).enumerated()), id: \.offset) { idx, row in
+                        Text(row.prefix(5).joined(separator: " | "))
+                            .font(.system(.caption2, design: .monospaced))
+                            .lineLimit(1)
+                            .foregroundColor(idx == 0 ? .secondary : .primary)
                     }
                 }
+                .padding(.vertical, 4)
             }
-            .task {
-                if settings.isImportConfigured { await loadSheetNames() }
-            }
+        } header: {
+            Text("データを貼り付け")
+        } footer: {
+            Text("Excelまたはスプレッドシートで対象シートを開き、全セル選択（Ctrl+A）→ コピー（Ctrl+C）してからボタンを押してください。")
+                .font(.caption)
         }
     }
 
-    // MARK: - Not configured
+    // MARK: - ② Column mapping section
 
-    var notConfiguredView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48)).foregroundColor(.statusWarning)
-            Text("連携が未設定です")
-                .font(.headline)
-            Text("アカウント管理 → Sheets同期の設定 からスプレッドシートのURLを登録してください")
-                .font(.subheadline).foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
+    var mappingSection: some View {
+        Section {
+            colPicker("日付",    idx: $mapping.date)
+            colPicker("予定名",  idx: $mapping.schedule)
+            colPicker("会場",    idx: $mapping.venue)
+            colPicker("集合時間", idx: $mapping.meetingTime)
+            colPicker("集合場所", idx: $mapping.meetingPlace)
 
-    // MARK: - Main form
-
-    var mainForm: some View {
-        Form {
-            sheetPickerSection
-            if !activeSheet.isEmpty && (selectedSheet != nil || showManualInput) {
-                loadEventsButton
+            Button {
+                applyMapping()
+            } label: {
+                Label("この設定でプレビュー", systemImage: "eye")
+                    .frame(maxWidth: .infinity)
             }
-            if loadingEvents {
-                Section { HStack { ProgressView().scaleEffect(0.8); Text("読み込み中...").foregroundColor(.secondary) } }
-            }
-            if let err = eventsError {
-                errorSection(err, label: "イベントの読み込みに失敗しました")
-            }
-            if !fetchedEvents.isEmpty {
-                eventsSection
-            }
-            if !selectedDates.isEmpty {
-                importButton
+            .buttonStyle(.bordered)
+        } header: {
+            Text("列のマッピング")
+        } footer: {
+            if let header = rawRows.first {
+                Text("1行目: " + header.prefix(8).enumerated().map { "\(colLabel($0)):\($1.prefix(5))" }.joined(separator: "  "))
+                    .font(.caption2).foregroundColor(.secondary)
             }
         }
     }
-
-    // MARK: - Sheet picker section
 
     @ViewBuilder
-    var sheetPickerSection: some View {
-        if loadingNames {
-            Section("シートを選択") {
-                HStack {
-                    ProgressView().scaleEffect(0.8)
-                    Text("シート一覧を取得中...").foregroundColor(.secondary)
+    private func colPicker(_ label: String, idx: Binding<Int>) -> some View {
+        HStack {
+            Text(label).frame(width: 72, alignment: .leading)
+            Spacer()
+            Picker("", selection: idx) {
+                ForEach(0..<colCount, id: \.self) { i in
+                    let preview = colPreview(i)
+                    Text(preview.isEmpty ? colLabel(i) : "\(colLabel(i)): \(preview)").tag(i)
                 }
             }
-        } else if showManualInput {
-            Section {
-                HStack {
-                    Text("シート名")
-                    Spacer()
-                    TextField("例: 5月", text: $manualInput)
-                        .multilineTextAlignment(.trailing)
-                        .autocorrectionDisabled()
-                        .onChange(of: manualInput) { _ in clearEvents() }
-                }
-                if !sheetNames.isEmpty {
-                    Button { showManualInput = false } label: {
-                        Label("シート一覧から選ぶ", systemImage: "list.bullet")
-                            .font(.subheadline)
-                    }
-                }
-            } header: {
-                Text("シートを選択")
-            } footer: {
-                if let err = namesError {
-                    Text("シート一覧取得エラー: \(err)")
-                        .foregroundColor(.statusError)
-                } else {
-                    Text("スプレッドシートのタブ名を正確に入力してください")
-                }
-            }
-        } else {
-            Section("シートを選択") {
-                ForEach(sheetNames, id: \.self) { name in
-                    Button {
-                        if selectedSheet != name {
-                            selectedSheet = name
-                            clearEvents()
-                        }
-                    } label: {
-                        HStack {
-                            Image(systemName: "tablecells").foregroundColor(.footballGreen).frame(width: 24)
-                            Text(name).foregroundColor(.primary)
-                            Spacer()
-                            if selectedSheet == name {
-                                Image(systemName: "checkmark").foregroundColor(.footballGreen).fontWeight(.semibold)
-                            }
-                        }
-                    }
-                }
-                Button { showManualInput = true } label: {
-                    Label("手動で入力する", systemImage: "keyboard")
-                        .font(.subheadline).foregroundColor(.secondary)
-                }
-            }
+            .pickerStyle(.menu)
         }
     }
 
-    // MARK: - Load events button
-
-    var loadEventsButton: some View {
-        Section {
-            Button { Task { await loadEvents() } } label: {
-                Label("\(activeSheet) のイベントを読み込む", systemImage: "arrow.down.doc")
-            }
-            .disabled(loadingEvents || activeSheet.isEmpty)
-        }
-    }
-
-    // MARK: - Events section
+    // MARK: - ③ Events section
 
     var eventsSection: some View {
         Section {
-            ForEach(fetchedEvents) { event in
-                importRow(for: event)
+            ForEach(events) { ev in
+                let imported = alreadyImported(ev)
+                HStack(spacing: 12) {
+                    Image(systemName: imported || selectedDates.contains(ev.sheetDate)
+                          ? "checkmark.circle.fill" : "circle")
+                        .foregroundColor(
+                            imported ? .secondary
+                            : selectedDates.contains(ev.sheetDate) ? .footballGreen : .secondary)
+                        .font(.system(size: 20))
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Text("\(ev.sheetDate)(\(ev.dayOfWeek))")
+                                .font(.caption).foregroundColor(.secondary)
+                            EventTypeBadge(type: ev.eventType)
+                        }
+                        Text(ev.schedule)
+                            .font(.subheadline).fontWeight(.medium)
+                            .foregroundColor(imported ? .secondary : .primary)
+                        if !ev.venue.isEmpty {
+                            Label(ev.venue, systemImage: "mappin")
+                                .font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    Spacer()
+                    if imported { Text("済み").font(.caption2).foregroundColor(.secondary) }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    guard !imported else { return }
+                    if selectedDates.contains(ev.sheetDate) { selectedDates.remove(ev.sheetDate) }
+                    else { selectedDates.insert(ev.sheetDate) }
+                }
+                .opacity(imported ? 0.5 : 1)
             }
         } header: {
             HStack {
-                Text("\(activeSheet) のイベント")
+                Text("イベント一覧（\(events.count)件）")
                 Spacer()
-                Button(selectedDates.count == availableCount ? "全解除" : "全選択") {
-                    toggleSelectAll()
+                let available = events.filter { !alreadyImported($0) }
+                Button(selectedDates.count == available.count ? "全解除" : "全選択") {
+                    let ids = available.map { $0.sheetDate }
+                    selectedDates = selectedDates.count == ids.count ? [] : Set(ids)
                 }
                 .font(.caption)
             }
         }
     }
 
-    // MARK: - Import button
+    // MARK: - ④ Import button
 
-    var importButton: some View {
+    var importSection: some View {
         Section {
-            Button { importSelected(); dismiss() } label: {
-                Label("\(selectedDates.count)件をインポート", systemImage: "square.and.arrow.down")
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
+            Button {
+                doImport()
+                dismiss()
+            } label: {
+                Label("\(selectedDates.count)件をインポート",
+                      systemImage: "square.and.arrow.down")
+                    .frame(maxWidth: .infinity).foregroundColor(.white)
             }
             .listRowBackground(Color.footballGreen)
         }
     }
 
-    // MARK: - Error section
+    // MARK: - Logic
 
-    func errorSection(_ message: String, label: String) -> some View {
-        Section {
-            VStack(alignment: .leading, spacing: 6) {
-                Label(label, systemImage: "xmark.circle")
-                    .font(.subheadline.bold()).foregroundColor(.statusError)
-                Text(message)
-                    .font(.caption).foregroundColor(.statusError)
-                    .textSelection(.enabled)
-            }
+    private func loadFromClipboard() {
+        inputError = nil
+        let text = UIPasteboard.general.string ?? ""
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            inputError = "クリップボードにデータがありません。ExcelでCtrl+Cしてからもう一度試してください"
+            return
+        }
+        rawRows = sheets.parseDelimitedText(text)
+        if rawRows.isEmpty {
+            inputError = "データを解析できませんでした"
+        } else {
+            events = []
+            selectedDates = []
+            applyMapping()
         }
     }
 
-    // MARK: - Import row
-
-    @ViewBuilder
-    private func importRow(for event: SheetEvent) -> some View {
-        let imported = alreadyImported(event)
-        HStack(spacing: 12) {
-            Image(systemName: imported || selectedDates.contains(event.sheetDate)
-                  ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(
-                    imported ? .secondary
-                    : selectedDates.contains(event.sheetDate) ? .footballGreen : .secondary
-                )
-                .font(.system(size: 20))
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Text("\(event.sheetDate)(\(event.dayOfWeek))")
-                        .font(.caption).foregroundColor(.secondary)
-                    EventTypeBadge(type: event.eventType)
-                }
-                Text(event.schedule)
-                    .font(.subheadline).fontWeight(.medium)
-                    .foregroundColor(imported ? .secondary : .primary)
-                if !event.venue.isEmpty {
-                    Label(event.venue, systemImage: "mappin")
-                        .font(.caption).foregroundColor(.secondary)
-                }
-                if !event.meetingTime.isEmpty {
-                    Label("集合 \(event.meetingTime)", systemImage: "clock")
-                        .font(.caption).foregroundColor(.secondary)
-                }
-            }
-            Spacer()
-            if imported { Text("済み").font(.caption2).foregroundColor(.secondary) }
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            guard !imported else { return }
-            if selectedDates.contains(event.sheetDate) { selectedDates.remove(event.sheetDate) }
-            else { selectedDates.insert(event.sheetDate) }
-        }
-        .opacity(imported ? 0.5 : 1.0)
-    }
-
-    // MARK: - Helpers
-
-    private var availableCount: Int {
-        fetchedEvents.filter { !alreadyImported($0) }.count
+    private func applyMapping() {
+        events = sheets.rowsToSheetEvents(rawRows, mapping: mapping)
+        selectedDates = Set(events.filter { !alreadyImported($0) }.map { $0.sheetDate })
     }
 
     private func alreadyImported(_ e: SheetEvent) -> Bool {
-        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == activeSheet }
+        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == monthName.trimmingCharacters(in: .whitespaces) }
     }
 
-    private func toggleSelectAll() {
-        let available = fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate }
-        selectedDates = selectedDates.count == available.count ? [] : Set(available)
-    }
-
-    private func clearEvents() {
-        fetchedEvents = []
-        selectedDates = []
-        eventsError = nil
-    }
-
-    // MARK: - Async loaders
-
-    private func loadSheetNames() async {
-        // CSV mode: can't list sheet names without Apps Script
-        guard settings.isSheetsConfigured else {
-            showManualInput = true
-            return
-        }
-        loadingNames = true
-        namesError = nil
-        defer { loadingNames = false }
-        do {
-            sheetNames = try await sheets.fetchSheetNames(scriptURL: settings.sheetsScriptURL)
-            showManualInput = sheetNames.isEmpty
-        } catch SheetsError.serverError(let msg) where msg.lowercased().contains("unknown action") {
-            showManualInput = true
-        } catch {
-            namesError = error.localizedDescription
-            showManualInput = true
-        }
-    }
-
-    private func loadEvents() async {
-        loadingEvents = true
-        eventsError = nil
-        defer { loadingEvents = false }
-        do {
-            if settings.isSheetsConfigured {
-                fetchedEvents = try await sheets.fetchEvents(month: activeSheet,
-                                                             scriptURL: settings.sheetsScriptURL)
-            } else {
-                fetchedEvents = try await sheets.fetchEventsFromCSV(sheetName: activeSheet,
-                                                                     spreadsheetURL: settings.spreadsheetFileURL)
-            }
-            selectedDates = Set(fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate })
-        } catch {
-            eventsError = error.localizedDescription
-        }
-    }
-
-    // MARK: - Import
-
-    private func importSelected() {
-        for sheetEvent in fetchedEvents where selectedDates.contains(sheetEvent.sheetDate) {
-            guard let date = sheetEvent.date(year: 2026) else { continue }
+    private func doImport() {
+        let month = monthName.trimmingCharacters(in: .whitespaces)
+        for ev in events where selectedDates.contains(ev.sheetDate) {
+            guard let date = ev.date(year: 2026) else { continue }
             var event = Event(
-                teamId: EventStore.teamId,
-                type: sheetEvent.eventType,
-                title: sheetEvent.schedule,
-                eventDate: date,
-                venue: sheetEvent.venue,
-                checklist: [],
-                createdBy: EventStore.managerId
+                teamId: EventStore.teamId, type: ev.eventType,
+                title: ev.schedule, eventDate: date,
+                venue: ev.venue, checklist: [], createdBy: EventStore.managerId
             )
-            event.sheetDate = sheetEvent.sheetDate
-            event.sheetMonth = activeSheet
-            if !sheetEvent.meetingPlace.isEmpty { event.meetingPoint = sheetEvent.meetingPlace }
-            event.departureTime = parseTime(sheetEvent.meetingTime, on: date)
-                ?? parseTime(sheetEvent.localMeetingTime, on: date)
+            event.sheetDate  = ev.sheetDate
+            event.sheetMonth = month
+            if !ev.meetingPlace.isEmpty { event.meetingPoint = ev.meetingPlace }
+            event.departureTime = parseTime(ev.meetingTime, on: date)
+                ?? parseTime(ev.localMeetingTime, on: date)
             eventStore.add(event)
         }
     }
 
-    private func parseTime(_ timeStr: String, on date: Date) -> Date? {
-        let clean = timeStr.trimmingCharacters(in: .whitespaces)
+    private func parseTime(_ str: String, on date: Date) -> Date? {
+        let clean = str.trimmingCharacters(in: .whitespaces)
         guard !clean.isEmpty else { return nil }
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ja_JP")
-        let comps = Calendar.current.dateComponents([.year, .month, .day], from: date)
-        for fmt in ["H:mm", "HH:mm", "H時mm分", "HH時mm分"] {
-            formatter.dateFormat = fmt
-            if let parsed = formatter.date(from: clean) {
-                let timeParts = Calendar.current.dateComponents([.hour, .minute], from: parsed)
-                var combined = comps
-                combined.hour = timeParts.hour
-                combined.minute = timeParts.minute
-                return Calendar.current.date(from: combined)
+        let fmt = DateFormatter(); fmt.locale = Locale(identifier: "ja_JP")
+        let base = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        for f in ["H:mm", "HH:mm", "H時mm分"] {
+            fmt.dateFormat = f
+            if let t = fmt.date(from: clean) {
+                let tp = Calendar.current.dateComponents([.hour, .minute], from: t)
+                var c = base; c.hour = tp.hour; c.minute = tp.minute
+                return Calendar.current.date(from: c)
             }
         }
         return nil

@@ -260,6 +260,56 @@ extension AttendanceStatus {
     }
 }
 
+// MARK: - Column mapping + clipboard parsing
+
+struct ColumnMapping {
+    var date         = 0   // A
+    var dayOfWeek    = 1   // B
+    var schedule     = 2   // C
+    var venue        = 3   // D
+    var localTime    = 4   // E
+    var meetingTime  = 5   // F
+    var meetingPlace = 6   // G
+    var attending    = 12  // M
+    var absent       = 13  // N
+}
+
+extension SheetsService {
+    /// Parse tab-separated (Excel copy) or comma-separated text into a 2-D array of strings.
+    func parseDelimitedText(_ text: String) -> [[String]] {
+        let firstLine = text.components(separatedBy: "\n").first ?? ""
+        if firstLine.contains("\t") {
+            return text
+                .components(separatedBy: "\n")
+                .map { $0.trimmingCharacters(in: CharacterSet(charactersIn: "\r")) }
+                .filter { !$0.isEmpty }
+                .map { $0.components(separatedBy: "\t") }
+        }
+        return parseCSVRows(text)
+    }
+
+    /// Convert a 2-D row array (first row = header, skipped) to SheetEvents using the given mapping.
+    func rowsToSheetEvents(_ rows: [[String]], mapping: ColumnMapping) -> [SheetEvent] {
+        rows.dropFirst().compactMap { row in
+            let get: (Int) -> String = { i in i < row.count ? row[i].trimmingCharacters(in: .whitespaces) : "" }
+            let date = get(mapping.date)
+            let schedule = get(mapping.schedule)
+            guard !date.isEmpty, !schedule.isEmpty else { return nil }
+            guard !schedule.uppercased().hasPrefix("OFF") else { return nil }
+            let raw = RawSheetRow(
+                date: date, dayOfWeek: get(mapping.dayOfWeek),
+                schedule: schedule, venue: get(mapping.venue),
+                localMeetingTime: get(mapping.localTime),
+                meetingTime: get(mapping.meetingTime),
+                meetingPlace: get(mapping.meetingPlace),
+                attendingPlayers: splitCellNames(get(mapping.attending)),
+                absentPlayers: splitCellNames(get(mapping.absent))
+            )
+            return SheetEvent(raw: raw)
+        }
+    }
+}
+
 // MARK: - Raw JSON row from Apps Script
 
 private struct RawSheetRow: Codable {
