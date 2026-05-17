@@ -234,12 +234,17 @@ struct ParentEventDetailView: View {
 
     private func rsvp(_ status: AttendanceStatus, player: Player) {
         eventStore.setStatus(status, playerName: player.name, playerId: player.id, eventId: eventId)
-        guard settings.isSheetsConfigured else { return }
+        guard settings.isSheetsConfigured,
+              let month = currentEvent.sheetMonth,
+              let sheetDate = currentEvent.sheetDate else { return }
         Task {
-            try? await sheets.update(eventTitle: currentEvent.title,
-                                     playerName: player.name,
-                                     status: status,
-                                     scriptURL: settings.sheetsScriptURL)
+            try? await sheets.updateAttendance(
+                month: month,
+                sheetDate: sheetDate,
+                playerName: player.name,
+                status: status,
+                scriptURL: settings.sheetsScriptURL
+            )
         }
     }
 }

@@ -2,9 +2,11 @@ import SwiftUI
 
 struct EventsView: View {
     @EnvironmentObject var eventStore: EventStore
+    @EnvironmentObject var settings: AppSettings
 
     @State private var selectedType: EventType? = nil
     @State private var showingAdd = false
+    @State private var showingImport = false
 
     var filtered: [Event] {
         eventStore.events.filter { event in
@@ -41,13 +43,23 @@ struct EventsView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button { showingAdd = true } label: {
-                        Image(systemName: "plus").fontWeight(.semibold)
+                    HStack(spacing: 4) {
+                        Button { showingImport = true } label: {
+                            Image(systemName: "square.and.arrow.down")
+                        }
+                        Button { showingAdd = true } label: {
+                            Image(systemName: "plus").fontWeight(.semibold)
+                        }
                     }
                 }
             }
             .sheet(isPresented: $showingAdd) {
                 AddEditEventView(mode: .add)
+            }
+            .sheet(isPresented: $showingImport) {
+                SheetImportView()
+                    .environmentObject(settings)
+                    .environmentObject(eventStore)
             }
         }
     }
@@ -176,4 +188,5 @@ struct EventTypeBadge: View {
 #Preview {
     EventsView()
         .environmentObject(EventStore())
+        .environmentObject(AppSettings())
 }

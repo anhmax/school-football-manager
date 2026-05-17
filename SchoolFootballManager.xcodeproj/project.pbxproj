@@ -51,6 +51,7 @@
 		B33B92D072E3D0722C005A66 /* SchoolFootballManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435FA46FCC651611F0F082D5 /* SchoolFootballManagerApp.swift */; };
 		B64985503EFA12E149D2D170 /* StatBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B669D97B2C46D487F80B0E1F /* StatBadgeView.swift */; };
 		B678DA0B83C9F1CD85C2CCB0 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165B1574FB3D3A9C3CF6827A /* AppSettings.swift */; };
+		C59AB7173E825017BD082969 /* SheetImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB0B969DA0E9F975A9E050C /* SheetImportView.swift */; };
 		C692C8C29210BBE47E486138 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2099AD0638399F0E69666BC /* EventStore.swift */; };
 		CA8ECEA3F2D04511292E57CC /* ManagerDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B36A1A75917634131FBF46 /* ManagerDashboardView.swift */; };
 		CC8FF5539E034BE63345ACD7 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9664419643EFA58A4EFCD675 /* AppUser.swift */; };
@@ -115,6 +116,7 @@
 		D9602B07EADEC4E29724C207 /* SimpleLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleLoginView.swift; sourceTree = "<group>"; };
 		D9A1292ED23692D0AE015133 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolBooking.swift; sourceTree = "<group>"; };
+		DAB0B969DA0E9F975A9E050C /* SheetImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetImportView.swift; sourceTree = "<group>"; };
 		E3A0D6745539CE3DEA7017FA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		E4E82981AA02F38CEF91AC1C /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
 		E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SchoolFootballManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +173,7 @@
 				C64EB2C15E6691AD6BA4D756 /* AddEditEventView.swift */,
 				B5BCDC6709C09401C39295EA /* EventDetailView.swift */,
 				9A44E3E0C12F0DEB670DDFBF /* EventsView.swift */,
+				DAB0B969DA0E9F975A9E050C /* SheetImportView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				DD2AB9507E7A48B7FAC203AC /* RegisterView.swift in Sources */,
 				18DFEAAC98F9F11981014BF4 /* RootView.swift in Sources */,
 				B33B92D072E3D0722C005A66 /* SchoolFootballManagerApp.swift in Sources */,
+				C59AB7173E825017BD082969 /* SheetImportView.swift in Sources */,
 				4C641B935F5C8FC4386694B0 /* SheetsService.swift in Sources */,
 				759FE14C3DB9E095336DC398 /* SheetsSetupView.swift in Sources */,
 				287F56DCABC6CDDF3252148D /* SimpleLoginView.swift in Sources */,

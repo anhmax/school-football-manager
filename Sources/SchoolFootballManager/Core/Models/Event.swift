@@ -41,6 +41,8 @@ struct Event: Codable, Identifiable {
     var createdBy: String
     var createdAt: Date
     var updatedAt: Date
+    var sheetDate: String?   // "5/2" — links back to Google Sheet row
+    var sheetMonth: String?  // "5月" — sheet tab name
 
     init(teamId: String, type: EventType, title: String, eventDate: Date,
          venue: String, checklist: [String] = [], createdBy: String) {

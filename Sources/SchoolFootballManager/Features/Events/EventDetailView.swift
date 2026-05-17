@@ -99,15 +99,18 @@ struct EventDetailView: View {
     // MARK: - Sheets sync
 
     private func pullFromSheets() async {
+        guard let month = currentEvent.sheetMonth,
+              let sheetDate = currentEvent.sheetDate else { return }
         syncError = nil
         do {
-            let rows = try await sheets.fetch(eventTitle: currentEvent.title,
-                                              scriptURL: settings.sheetsScriptURL)
-            for row in rows {
-                eventStore.setStatus(row.attendanceStatus,
-                                     playerName: row.playerName,
-                                     playerId: nil,
-                                     eventId: eventId)
+            let rows = try await sheets.fetchEvents(month: month, scriptURL: settings.sheetsScriptURL)
+            if let row = rows.first(where: { $0.sheetDate == sheetDate }) {
+                for name in row.attendingPlayers {
+                    eventStore.setStatus(.attending, playerName: name, playerId: nil, eventId: eventId)
+                }
+                for name in row.absentPlayers {
+                    eventStore.setStatus(.absent, playerName: name, playerId: nil, eventId: eventId)
+                }
             }
         } catch {
             syncError = "Sheets同期エラー: \(error.localizedDescription)"
@@ -115,13 +118,18 @@ struct EventDetailView: View {
     }
 
     private func pushToSheets(playerName: String, status: AttendanceStatus) {
-        guard settings.isSheetsConfigured else { return }
+        guard settings.isSheetsConfigured,
+              let month = currentEvent.sheetMonth,
+              let sheetDate = currentEvent.sheetDate else { return }
         Task {
             do {
-                try await sheets.update(eventTitle: currentEvent.title,
-                                        playerName: playerName,
-                                        status: status,
-                                        scriptURL: settings.sheetsScriptURL)
+                try await sheets.updateAttendance(
+                    month: month,
+                    sheetDate: sheetDate,
+                    playerName: playerName,
+                    status: status,
+                    scriptURL: settings.sheetsScriptURL
+                )
             } catch {
                 syncError = "Sheets書き込みエラー: \(error.localizedDescription)"
             }
