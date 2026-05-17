@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		00D236D33A7AE3C968048491 /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B66A38833D4147D7EF86F /* PlayerDetailView.swift */; };
 		0134AD2F49047C16ED0077D3 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = F5309FA37FD9204739AB0A4E /* FirebaseStorage */; };
+		104CC6254B6A2FF795516D92 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C354612228E95AD0F05A3BC2 /* AccountStore.swift */; };
 		18DFEAAC98F9F11981014BF4 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1553376D18CBB6095349694 /* RootView.swift */; };
 		271800731CC3653D1C5AC613 /* CarpoolBooking.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */; };
+		287F56DCABC6CDDF3252148D /* SimpleLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9602B07EADEC4E29724C207 /* SimpleLoginView.swift */; };
 		2B0A63F99A33575AD615828C /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BCDC6709C09401C39295EA /* EventDetailView.swift */; };
 		2DFB3D495FA5A31A81FB1695 /* AddEditPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F43F53DA03ED86492AA33E /* AddEditPlayerView.swift */; };
 		30FED06B9A922B86C45C474F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */; };
@@ -31,6 +33,7 @@
 		6A2163F7ADEC6EC0A947D121 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A3776886F345A73FEBE208 /* Event.swift */; };
 		710010BD0CBDB83D0838111A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6E9CAF7A1F2F9450AF9D4B /* AppDelegate.swift */; };
 		78B3BEEABC76443D79C32E87 /* PlayerAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F4037B4D2017DBD821900A /* PlayerAvatarView.swift */; };
+		79F9ED51EBDF40074EA182B3 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1292ED23692D0AE015133 /* Account.swift */; };
 		80BAAB50304FC879587A09E0 /* PlayerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B9C6046650EC95214F4FB /* PlayerStore.swift */; };
 		828B32571E5BC03F30DF42DC /* StatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78898130145F8DB17ED3489 /* StatsService.swift */; };
 		858771524E8A8C8423C15A77 /* AdminDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63859CE5B048DD3EA4F13FBC /* AdminDashboardView.swift */; };
@@ -38,6 +41,7 @@
 		88A9E4C1C85160644FB7DEC4 /* CarpoolService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B6A20ADDB35E8216DF2C4F /* CarpoolService.swift */; };
 		9924378E6202AA8A63702E82 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A0D6745539CE3DEA7017FA /* Player.swift */; };
 		99589FEC793ECAB493126952 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE34749EDE268DDB0B213D6A /* FirebaseFirestoreSwift */; };
+		99C4B87804C657FE161D5ACA /* ParentHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C889A16E45217D1D45AF58C2 /* ParentHomeView.swift */; };
 		9DF01A467414BB058DAF37C9 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F93B59DAE12DAAC788D2F5 /* AppState.swift */; };
 		9FA20DF3BB212C6059055711 /* AddEditEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64EB2C15E6691AD6BA4D756 /* AddEditEventView.swift */; };
 		A832CD2A4F6C3DFC71CBB92E /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E693A9DC5A030AD2BE5A242B /* StatsView.swift */; };
@@ -54,6 +58,7 @@
 		DEADB6CB35706ACD943D11C9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CBC80668131926B4D346ADAB /* FirebaseFirestore */; };
 		E7869312B5E8785DC9423E9E /* EventRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DAE805A1D19B91CC6D4BAE /* EventRowView.swift */; };
 		E992AF9EB5BAEC2E8E62A336 /* CarpoolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FCEFB7F250CEF948FDB8B4 /* CarpoolView.swift */; };
+		F187C146EFDA600596270EDD /* AccountManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A727AD5703A8D9491D2F39C /* AccountManagementView.swift */; };
 		F59958C8B5648B52830B1FE8 /* PlayerStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5B9D5EE2F08F9010F5AD2F /* PlayerStats.swift */; };
 		FF6E7EB6C3A16E12AD1730F5 /* EventRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3009EE774C0B330284CC5A61 /* EventRegistration.swift */; };
 /* End PBXBuildFile section */
@@ -65,6 +70,7 @@
 		1B39B093D06F576635B81C86 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		2A8B9B4200926651705358CB /* Carpool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Carpool.swift; sourceTree = "<group>"; };
 		3009EE774C0B330284CC5A61 /* EventRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventRegistration.swift; sourceTree = "<group>"; };
+		3A727AD5703A8D9491D2F39C /* AccountManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManagementView.swift; sourceTree = "<group>"; };
 		3B5B66A38833D4147D7EF86F /* PlayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
 		3DFB71B5A7ED6CCE57C0CD7B /* PlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersView.swift; sourceTree = "<group>"; };
 		435FA46FCC651611F0F082D5 /* SchoolFootballManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolFootballManagerApp.swift; sourceTree = "<group>"; };
@@ -94,10 +100,14 @@
 		BF8243EF1903BA2BCBA15B8C /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		C0B6A20ADDB35E8216DF2C4F /* CarpoolService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolService.swift; sourceTree = "<group>"; };
 		C1553376D18CBB6095349694 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		C354612228E95AD0F05A3BC2 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		C64EB2C15E6691AD6BA4D756 /* AddEditEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditEventView.swift; sourceTree = "<group>"; };
 		C6DAE805A1D19B91CC6D4BAE /* EventRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventRowView.swift; sourceTree = "<group>"; };
+		C889A16E45217D1D45AF58C2 /* ParentHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentHomeView.swift; sourceTree = "<group>"; };
 		D2099AD0638399F0E69666BC /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 		D78898130145F8DB17ED3489 /* StatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsService.swift; sourceTree = "<group>"; };
+		D9602B07EADEC4E29724C207 /* SimpleLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleLoginView.swift; sourceTree = "<group>"; };
+		D9A1292ED23692D0AE015133 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarpoolBooking.swift; sourceTree = "<group>"; };
 		E3A0D6745539CE3DEA7017FA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		E4E82981AA02F38CEF91AC1C /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
@@ -126,6 +136,7 @@
 		2072260ADAFF235D243F9178 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D9A1292ED23692D0AE015133 /* Account.swift */,
 				9664419643EFA58A4EFCD675 /* AppUser.swift */,
 				2A8B9B4200926651705358CB /* Carpool.swift */,
 				DA4D4C2E59765DB7020D02DA /* CarpoolBooking.swift */,
@@ -164,6 +175,7 @@
 				F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */,
 				834046745235CD586095635C /* LoginView.swift */,
 				A17410AD5B7320F462825A77 /* RegisterView.swift */,
+				D9602B07EADEC4E29724C207 /* SimpleLoginView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -225,6 +237,7 @@
 				63859CE5B048DD3EA4F13FBC /* AdminDashboardView.swift */,
 				A1B36A1A75917634131FBF46 /* ManagerDashboardView.swift */,
 				92F13E39FC4BE7F3FC1434D4 /* ParentDashboardView.swift */,
+				C889A16E45217D1D45AF58C2 /* ParentHomeView.swift */,
 				C1553376D18CBB6095349694 /* RootView.swift */,
 			);
 			path = Dashboard;
@@ -233,6 +246,7 @@
 		9B291D15E0DB519019C24B4C /* Stores */ = {
 			isa = PBXGroup;
 			children = (
+				C354612228E95AD0F05A3BC2 /* AccountStore.swift */,
 				D2099AD0638399F0E69666BC /* EventStore.swift */,
 				B42B9C6046650EC95214F4FB /* PlayerStore.swift */,
 			);
@@ -242,6 +256,7 @@
 		C0E3C5F533EA716E57E5838F /* Admin */ = {
 			isa = PBXGroup;
 			children = (
+				3A727AD5703A8D9491D2F39C /* AccountManagementView.swift */,
 				7AB9A2171252663903448587 /* UserApprovalView.swift */,
 			);
 			path = Admin;
@@ -394,6 +409,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79F9ED51EBDF40074EA182B3 /* Account.swift in Sources */,
+				F187C146EFDA600596270EDD /* AccountManagementView.swift in Sources */,
+				104CC6254B6A2FF795516D92 /* AccountStore.swift in Sources */,
 				9FA20DF3BB212C6059055711 /* AddEditEventView.swift in Sources */,
 				2DFB3D495FA5A31A81FB1695 /* AddEditPlayerView.swift in Sources */,
 				858771524E8A8C8423C15A77 /* AdminDashboardView.swift in Sources */,
@@ -422,6 +440,7 @@
 				60D672961A043ED7449FD131 /* MatchRecord.swift in Sources */,
 				878804A0357E5EAAA5A36D6A /* NotificationService.swift in Sources */,
 				DAD7E27579124F400609A36E /* ParentDashboardView.swift in Sources */,
+				99C4B87804C657FE161D5ACA /* ParentHomeView.swift in Sources */,
 				9924378E6202AA8A63702E82 /* Player.swift in Sources */,
 				78B3BEEABC76443D79C32E87 /* PlayerAvatarView.swift in Sources */,
 				00D236D33A7AE3C968048491 /* PlayerDetailView.swift in Sources */,
@@ -432,6 +451,7 @@
 				DD2AB9507E7A48B7FAC203AC /* RegisterView.swift in Sources */,
 				18DFEAAC98F9F11981014BF4 /* RootView.swift in Sources */,
 				B33B92D072E3D0722C005A66 /* SchoolFootballManagerApp.swift in Sources */,
+				287F56DCABC6CDDF3252148D /* SimpleLoginView.swift in Sources */,
 				B64985503EFA12E149D2D170 /* StatBadgeView.swift in Sources */,
 				828B32571E5BC03F30DF42DC /* StatsService.swift in Sources */,
 				A832CD2A4F6C3DFC71CBB92E /* StatsView.swift in Sources */,

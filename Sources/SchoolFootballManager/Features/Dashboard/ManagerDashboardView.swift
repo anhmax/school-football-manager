@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct ManagerDashboardView: View {
-    @EnvironmentObject var playerStore: PlayerStore
-    @EnvironmentObject var eventStore:  EventStore
+    @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var playerStore:  PlayerStore
+    @EnvironmentObject var eventStore:   EventStore
 
     @State private var selectedTab = 0
 
@@ -23,6 +24,10 @@ struct ManagerDashboardView: View {
             StatsView()
                 .tabItem { Label("統計", systemImage: "chart.bar.fill") }
                 .tag(3)
+
+            AccountManagementView()
+                .tabItem { Label("アカウント", systemImage: "person.badge.key") }
+                .tag(4)
         }
         .tint(.footballGreen)
     }
@@ -31,8 +36,9 @@ struct ManagerDashboardView: View {
 // MARK: - Overview Tab
 
 struct OverviewTab: View {
-    @EnvironmentObject var playerStore: PlayerStore
-    @EnvironmentObject var eventStore:  EventStore
+    @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var playerStore:  PlayerStore
+    @EnvironmentObject var eventStore:   EventStore
 
     var nextEvent: Event? {
         eventStore.events.first { $0.eventDate > Date() }
@@ -52,6 +58,17 @@ struct OverviewTab: View {
             .background(Color.backgroundGrouped)
             .navigationTitle("3年生チーム")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        accountStore.logout()
+                    } label: {
+                        Label("ログアウト", systemImage: "rectangle.portrait.and.arrow.right")
+                            .font(.subheadline)
+                    }
+                    .foregroundColor(.statusError)
+                }
+            }
         }
     }
 
@@ -63,14 +80,15 @@ struct OverviewTab: View {
                                         startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(width: 64, height: 64)
                 Image(systemName: "figure.soccer")
-                    .font(.system(size: 28))
-                    .foregroundColor(.white)
+                    .font(.system(size: 28)).foregroundColor(.white)
             }
             VStack(alignment: .leading, spacing: 4) {
                 Text("3年生チーム")
                     .font(.title2).fontWeight(.bold)
-                Text("シーズン 2026")
-                    .font(.subheadline).foregroundColor(.textSecondary)
+                if let name = accountStore.currentAccount?.displayName {
+                    Text(name)
+                        .font(.subheadline).foregroundColor(.textSecondary)
+                }
             }
             Spacer()
         }
@@ -82,28 +100,26 @@ struct OverviewTab: View {
 
     var statsRow: some View {
         HStack(spacing: 12) {
-            QuickStatCard(value: "\(playerStore.players.count)", label: "選手数", icon: "person.3.fill", color: .footballBlue)
-            QuickStatCard(value: "\(eventStore.events.filter { $0.isUpcoming }.count)", label: "予定", icon: "calendar", color: .footballGreen)
-            QuickStatCard(value: "\(eventStore.events.filter { $0.type == .match }.count)", label: "試合", icon: "figure.soccer", color: .footballRed)
+            QuickStatCard(value: "\(playerStore.players.count)",
+                          label: "選手数", icon: "person.3.fill", color: .footballBlue)
+            QuickStatCard(value: "\(eventStore.events.filter { $0.isUpcoming }.count)",
+                          label: "予定", icon: "calendar", color: .footballGreen)
+            QuickStatCard(value: "\(accountStore.parentAccounts.count)",
+                          label: "保護者", icon: "figure.and.child.holdinghands", color: .footballOrange)
         }
     }
 
     func nextEventCard(_ event: Event) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("次のイベント")
-                    .font(.headline)
+                Text("次のイベント").font(.headline)
                 Spacer()
                 EventTypeBadge(type: event.type)
             }
-
             VStack(alignment: .leading, spacing: 6) {
-                Text(event.title)
-                    .font(.title3).fontWeight(.semibold)
-
+                Text(event.title).font(.title3).fontWeight(.semibold)
                 Label(event.displayDate, systemImage: "calendar")
                     .font(.subheadline).foregroundColor(.textSecondary)
-
                 Label(event.venue, systemImage: "mappin.circle")
                     .font(.subheadline).foregroundColor(.textSecondary)
             }
@@ -123,13 +139,9 @@ struct QuickStatCard: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundColor(color)
-            Text(value)
-                .font(.title2).fontWeight(.bold)
-            Text(label)
-                .font(.caption).foregroundColor(.textSecondary)
+            Image(systemName: icon).font(.system(size: 20)).foregroundColor(color)
+            Text(value).font(.title2).fontWeight(.bold)
+            Text(label).font(.caption).foregroundColor(.textSecondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
