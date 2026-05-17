@@ -23,7 +23,7 @@ struct AccountManagementView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Sheets同期の設定")
                                     .font(.subheadline)
-                                Text(settings.isSheetsConfigured ? "設定済み" : "未設定")
+                                Text(settings.isImportConfigured ? "設定済み" : "未設定")
                                     .font(.caption)
                                     .foregroundColor(settings.isSheetsConfigured ? .statusSuccess : .secondary)
                             }

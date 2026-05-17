@@ -92,6 +92,102 @@ class SheetsService: ObservableObject {
         lastSyncTime = Date()
     }
 
+    // MARK: - Fetch events from CSV (works with Excel files on Google Drive)
+
+    func fetchEventsFromCSV(sheetName: String, spreadsheetURL: String) async throws -> [SheetEvent] {
+        let fileId = try extractSpreadsheetId(from: spreadsheetURL)
+        let encoded = sheetName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? sheetName
+        let urlString = "https://docs.google.com/spreadsheets/d/\(fileId)/export?format=csv&sheet=\(encoded)"
+        guard let url = URL(string: urlString) else { throw SheetsError.invalidURL }
+
+        isSyncing = true; syncError = nil
+        defer { isSyncing = false }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let http = response as? HTTPURLResponse else { throw SheetsError.httpError(0) }
+        guard (200...299).contains(http.statusCode) else {
+            throw SheetsError.serverError("アクセスエラー (HTTP \(http.statusCode))。ファイルを「リンクを知っている全員が閲覧可能」に設定してください")
+        }
+
+        guard let csv = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .shiftJIS) else {
+            throw SheetsError.serverError("データの読み込みに失敗しました")
+        }
+        if csv.trimmingCharacters(in: .whitespaces).hasPrefix("<") {
+            throw SheetsError.serverError("Googleのログインページにリダイレクトされました。ファイルの共有設定を確認してください")
+        }
+
+        lastSyncTime = Date()
+        return parseCSVToEvents(csv)
+    }
+
+    private func extractSpreadsheetId(from urlString: String) throws -> String {
+        for pattern in [#"/spreadsheets/d/([a-zA-Z0-9_-]+)"#, #"/file/d/([a-zA-Z0-9_-]+)"#] {
+            if let range = urlString.range(of: pattern, options: .regularExpression) {
+                let parts = String(urlString[range]).components(separatedBy: "/")
+                if let id = parts.last(where: { !$0.isEmpty && $0 != "d" }), !id.isEmpty {
+                    return id
+                }
+            }
+        }
+        throw SheetsError.serverError("URLからファイルIDを取得できませんでした。共有リンクを貼り付けてください")
+    }
+
+    private func parseCSVToEvents(_ csv: String) -> [SheetEvent] {
+        let rows = parseCSVRows(csv)
+        return rows.dropFirst().compactMap { row -> SheetEvent? in
+            let get: (Int) -> String = { i in i < row.count ? row[i].trimmingCharacters(in: .whitespaces) : "" }
+            let date = get(0); let schedule = get(2)
+            guard !date.isEmpty, !schedule.isEmpty else { return nil }
+            guard !schedule.uppercased().hasPrefix("OFF") else { return nil }
+            let raw = RawSheetRow(
+                date: date, dayOfWeek: get(1), schedule: schedule, venue: get(3),
+                localMeetingTime: get(4), meetingTime: get(5), meetingPlace: get(6),
+                attendingPlayers: splitCellNames(get(12)),
+                absentPlayers: splitCellNames(get(13))
+            )
+            return SheetEvent(raw: raw)
+        }
+    }
+
+    private func splitCellNames(_ str: String) -> [String] {
+        str.components(separatedBy: CharacterSet(charactersIn: "\n,、"))
+           .map { $0.trimmingCharacters(in: .whitespaces) }
+           .filter { !$0.isEmpty }
+    }
+
+    private func parseCSVRows(_ csv: String) -> [[String]] {
+        var rows: [[String]] = []
+        var fields: [String] = []
+        var field = ""
+        var inQuotes = false
+        var idx = csv.startIndex
+
+        while idx < csv.endIndex {
+            let ch = csv[idx]
+            let nxt = csv.index(after: idx)
+            if inQuotes {
+                if ch == "\"" {
+                    if nxt < csv.endIndex && csv[nxt] == "\"" { field.append("\""); idx = csv.index(after: nxt); continue }
+                    else { inQuotes = false }
+                } else { field.append(ch) }
+            } else {
+                switch ch {
+                case "\"": inQuotes = true
+                case ",": fields.append(field); field = ""
+                case "\r":
+                    fields.append(field); field = ""; rows.append(fields); fields = []
+                    if nxt < csv.endIndex && csv[nxt] == "\n" { idx = csv.index(after: nxt); continue }
+                case "\n":
+                    fields.append(field); field = ""; rows.append(fields); fields = []
+                default: field.append(ch)
+                }
+            }
+            idx = csv.index(after: idx)
+        }
+        if !field.isEmpty || !fields.isEmpty { fields.append(field); rows.append(fields) }
+        return rows.filter { $0.contains { !$0.trimmingCharacters(in: .whitespaces).isEmpty } }
+    }
+
     // MARK: - Fetch sheet tab names
 
     func fetchSheetNames(scriptURL: String) async throws -> [String] {

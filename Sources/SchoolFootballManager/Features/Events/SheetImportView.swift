@@ -30,7 +30,7 @@ struct SheetImportView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if !settings.isSheetsConfigured {
+                if !settings.isImportConfigured {
                     notConfiguredView
                 } else {
                     mainForm
@@ -49,7 +49,7 @@ struct SheetImportView: View {
                 }
             }
             .task {
-                if settings.isSheetsConfigured { await loadSheetNames() }
+                if settings.isImportConfigured { await loadSheetNames() }
             }
         }
     }
@@ -60,9 +60,9 @@ struct SheetImportView: View {
         VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 48)).foregroundColor(.statusWarning)
-            Text("Sheets連携が未設定です")
+            Text("連携が未設定です")
                 .font(.headline)
-            Text("アカウント管理 → Sheets同期の設定 からURLを登録してください")
+            Text("アカウント管理 → Sheets同期の設定 からスプレッドシートのURLを登録してください")
                 .font(.subheadline).foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -281,6 +281,11 @@ struct SheetImportView: View {
     // MARK: - Async loaders
 
     private func loadSheetNames() async {
+        // CSV mode: can't list sheet names without Apps Script
+        guard settings.isSheetsConfigured else {
+            showManualInput = true
+            return
+        }
         loadingNames = true
         namesError = nil
         defer { loadingNames = false }
@@ -288,7 +293,6 @@ struct SheetImportView: View {
             sheetNames = try await sheets.fetchSheetNames(scriptURL: settings.sheetsScriptURL)
             showManualInput = sheetNames.isEmpty
         } catch SheetsError.serverError(let msg) where msg.lowercased().contains("unknown action") {
-            // Old script without getSheetNames → silently fall back to text input
             showManualInput = true
         } catch {
             namesError = error.localizedDescription
@@ -301,8 +305,13 @@ struct SheetImportView: View {
         eventsError = nil
         defer { loadingEvents = false }
         do {
-            fetchedEvents = try await sheets.fetchEvents(month: activeSheet,
-                                                         scriptURL: settings.sheetsScriptURL)
+            if settings.isSheetsConfigured {
+                fetchedEvents = try await sheets.fetchEvents(month: activeSheet,
+                                                             scriptURL: settings.sheetsScriptURL)
+            } else {
+                fetchedEvents = try await sheets.fetchEventsFromCSV(sheetName: activeSheet,
+                                                                     spreadsheetURL: settings.spreadsheetFileURL)
+            }
             selectedDates = Set(fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate })
         } catch {
             eventsError = error.localizedDescription
