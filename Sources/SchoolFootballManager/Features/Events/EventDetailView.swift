@@ -113,7 +113,7 @@ struct EventDetailView: View {
 
     var scheduleCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "スケジュール", icon: "clock")
+            Label("スケジュール", systemImage: "clock").font(.headline)
 
             VStack(spacing: 0) {
                 if let dep = currentEvent.departureTime {
@@ -140,7 +140,7 @@ struct EventDetailView: View {
 
     var checklistCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "持ち物チェックリスト", icon: "checklist")
+            Label("持ち物チェックリスト", systemImage: "checklist").font(.headline)
 
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(currentEvent.checklist, id: \.self) { item in
@@ -162,7 +162,7 @@ struct EventDetailView: View {
 
     func notesCard(_ notes: String) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "メモ", icon: "note.text")
+            Label("メモ", systemImage: "note.text").font(.headline)
             Text(notes)
                 .font(.subheadline)
                 .foregroundColor(.textSecondary)
@@ -176,7 +176,7 @@ struct EventDetailView: View {
 
     var attendanceCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "参加登録", icon: "person.badge.clock")
+            Label("参加登録", systemImage: "person.badge.clock").font(.headline)
 
             VStack(spacing: 0) {
                 ForEach(allPlayerRows, id: \.player.id) { row in
@@ -238,16 +238,6 @@ struct ScheduleRow: View {
             Spacer()
         }
         .padding(.vertical, 10)
-    }
-}
-
-struct SectionHeader: View {
-    let title: String
-    let icon: String
-
-    var body: some View {
-        Label(title, systemImage: icon)
-            .font(.headline)
     }
 }
 
