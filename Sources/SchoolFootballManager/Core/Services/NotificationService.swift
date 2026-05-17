@@ -165,7 +165,7 @@ class NotificationService: NSObject, ObservableObject {
 
 // MARK: - MessagingDelegate
 
-extension NotificationService: MessagingDelegate {
+extension NotificationService: @preconcurrency MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
         self.fcmToken = fcmToken

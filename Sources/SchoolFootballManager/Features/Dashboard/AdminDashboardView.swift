@@ -37,7 +37,7 @@ struct AdminDashboardView: View {
                 .tabItem {
                     Label("ユーザー管理", systemImage: "person.badge.key")
                 }
-                .badge(pendingUsersCount > 0 ? pendingUsersCount : nil)
+                .badge(pendingUsersCount > 0 ? pendingUsersCount : (nil as Int?))
                 .tag(3)
 
             // Settings
@@ -168,10 +168,7 @@ struct AdminOverviewView: View {
     @ViewBuilder
     private var teamsOverviewSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionHeader(
-                title: "チーム一覧",
-                subtitle: "各チームの状況"
-            )
+            SectionHeader(title: "チーム一覧")
 
             LazyVStack(spacing: 12) {
                 ForEach(Grade.allCases, id: \.self) { grade in
@@ -186,10 +183,7 @@ struct AdminOverviewView: View {
     @ViewBuilder
     private var recentActivitySection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionHeader(
-                title: "最近のアクティビティ",
-                subtitle: "直近の更新情報"
-            )
+            SectionHeader(title: "最近のアクティビティ")
 
             VStack(spacing: 12) {
                 ActivityRow(
