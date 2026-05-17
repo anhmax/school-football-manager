@@ -92,6 +92,17 @@ class SheetsService: ObservableObject {
         lastSyncTime = Date()
     }
 
+    // MARK: - Fetch sheet tab names
+
+    func fetchSheetNames(scriptURL: String) async throws -> [String] {
+        let url = try buildURL(scriptURL, params: ["action": "getSheetNames"])
+        isSyncing = true; syncError = nil
+        defer { isSyncing = false }
+        let data = try await get(url)
+        try throwIfServerError(data)
+        return try JSONDecoder().decode([String].self, from: data)
+    }
+
     // MARK: - Test connection
 
     func testConnection(scriptURL: String) async throws {
@@ -195,13 +206,20 @@ extension SheetsService {
 function doGet(e) {
   try {
     const action = e.parameter.action;
-    if (action === "ping")            return json({ ok: true });
-    if (action === "fetchEvents")     return json(fetchEvents(e.parameter.month));
+    if (action === "ping")             return json({ ok: true });
+    if (action === "getSheetNames")    return json(getSheetNames());
+    if (action === "fetchEvents")      return json(fetchEvents(e.parameter.month));
     if (action === "updateAttendance") return json(updateAttendance(e));
     return json({ error: "Unknown action" });
   } catch(err) {
     return json({ error: err.toString() });
   }
+}
+
+function getSheetNames() {
+  return SpreadsheetApp.getActiveSpreadsheet()
+           .getSheets()
+           .map(s => s.getName());
 }
 
 // 列インデックス（1始まり）
