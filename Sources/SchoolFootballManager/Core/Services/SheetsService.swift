@@ -64,6 +64,7 @@ class SheetsService: ObservableObject {
         defer { isSyncing = false }
 
         let data = try await get(url)
+        try throwIfServerError(data)
         let raw = try JSONDecoder().decode([RawSheetRow].self, from: data)
         lastSyncTime = Date()
         return raw.compactMap { SheetEvent(raw: $0) }
@@ -82,6 +83,7 @@ class SheetsService: ObservableObject {
             "status":     status.sheetLabel
         ])
         let data = try await get(url)
+        try throwIfServerError(data)
         struct Res: Codable { var success: Bool?; var error: String? }
         let res = try JSONDecoder().decode(Res.self, from: data)
         if res.success != true {
@@ -98,6 +100,16 @@ class SheetsService: ObservableObject {
     }
 
     // MARK: - Helpers
+
+    /// If the JSON is {"error":"..."}, throw serverError so callers get a clear message
+    /// instead of a confusing DecodingError.
+    private func throwIfServerError(_ data: Data) throws {
+        struct ErrPayload: Codable { var error: String? }
+        if let payload = try? JSONDecoder().decode(ErrPayload.self, from: data),
+           let msg = payload.error {
+            throw SheetsError.serverError(msg)
+        }
+    }
 
     private func get(_ url: URL) async throws -> Data {
         let (data, response) = try await URLSession.shared.data(from: url)

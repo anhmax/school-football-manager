@@ -7,26 +7,35 @@ struct SheetImportView: View {
 
     @StateObject private var sheets = SheetsService()
 
-    private let months = ["4月","5月","6月","7月","8月","9月","10月","11月","12月","1月","2月","3月"]
-    @State private var selectedMonth = "5月"
+    @State private var monthInput = "5月"
     @State private var fetchedEvents: [SheetEvent] = []
     @State private var selectedDates: Set<String> = []
     @State private var errorMessage: String?
     @State private var hasFetched = false
 
+    private var trimmedMonth: String { monthInput.trimmingCharacters(in: .whitespaces) }
+
     private func alreadyImported(_ e: SheetEvent) -> Bool {
-        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == selectedMonth }
+        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == trimmedMonth }
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("シートの月を選択") {
-                    Picker("月", selection: $selectedMonth) {
-                        ForEach(months, id: \.self) { Text($0) }
+                Section {
+                    HStack {
+                        Text("シート名")
+                        Spacer()
+                        TextField("5月", text: $monthInput)
+                            .multilineTextAlignment(.trailing)
+                            .autocorrectionDisabled()
+                            .onChange(of: monthInput) { _ in
+                                fetchedEvents = []
+                                selectedDates = []
+                                hasFetched = false
+                                errorMessage = nil
+                            }
                     }
-                    .pickerStyle(.menu)
-
                     Button {
                         Task { await fetchEvents() }
                     } label: {
@@ -39,7 +48,11 @@ struct SheetImportView: View {
                             Label("スケジュールを読み込む", systemImage: "arrow.down.doc")
                         }
                     }
-                    .disabled(sheets.isSyncing || !settings.isSheetsConfigured)
+                    .disabled(sheets.isSyncing || !settings.isSheetsConfigured || trimmedMonth.isEmpty)
+                } header: {
+                    Text("シートのタブ名を入力")
+                } footer: {
+                    Text("Googleスプレッドシートの下部に表示されているシート名を正確に入力してください（例: 5月, 6月）")
                 }
 
                 if !settings.isSheetsConfigured {
@@ -53,9 +66,14 @@ struct SheetImportView: View {
 
                 if let err = errorMessage {
                     Section {
-                        Label(err, systemImage: "xmark.circle")
-                            .font(.subheadline)
-                            .foregroundColor(.statusError)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Label("エラー", systemImage: "xmark.circle")
+                                .font(.subheadline.bold())
+                                .foregroundColor(.statusError)
+                            Text(err)
+                                .font(.caption)
+                                .foregroundColor(.statusError)
+                        }
                     }
                 }
 
@@ -92,12 +110,6 @@ struct SheetImportView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("閉じる") { dismiss() }
                 }
-            }
-            .onChange(of: selectedMonth) { _ in
-                fetchedEvents = []
-                selectedDates = []
-                hasFetched = false
-                errorMessage = nil
             }
         }
     }
@@ -149,7 +161,7 @@ struct SheetImportView: View {
     private func fetchEvents() async {
         errorMessage = nil
         do {
-            fetchedEvents = try await sheets.fetchEvents(month: selectedMonth,
+            fetchedEvents = try await sheets.fetchEvents(month: trimmedMonth,
                                                          scriptURL: settings.sheetsScriptURL)
             hasFetched = true
             selectedDates = Set(fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate })
@@ -172,7 +184,7 @@ struct SheetImportView: View {
                 createdBy: EventStore.managerId
             )
             event.sheetDate = sheetEvent.sheetDate
-            event.sheetMonth = selectedMonth
+            event.sheetMonth = trimmedMonth
             if !sheetEvent.meetingPlace.isEmpty {
                 event.meetingPoint = sheetEvent.meetingPlace
             }

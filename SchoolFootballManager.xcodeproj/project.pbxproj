@@ -119,7 +119,7 @@
 		DAB0B969DA0E9F975A9E050C /* SheetImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetImportView.swift; sourceTree = "<group>"; };
 		E3A0D6745539CE3DEA7017FA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		E4E82981AA02F38CEF91AC1C /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
-		E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SchoolFootballManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5947BD0E4E6026126B9EE35 /* SchoolFootballManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SchoolFootballManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E693A9DC5A030AD2BE5A242B /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		F6BC7EDE7CA76855F08C57EF /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		FB3741576344AF261BB6968E /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -388,11 +388,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-					4E2DDF6093AAFFA53A73CBFC = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = 30FD853BD85219BA7C63F6A2 /* Build configuration list for PBXProject "SchoolFootballManager" */;
 			developmentRegion = en;
@@ -485,6 +480,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = FM3S285F9Z;
 				INFOPLIST_FILE = Sources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -503,6 +499,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = FM3S285F9Z;
 				INFOPLIST_FILE = Sources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
