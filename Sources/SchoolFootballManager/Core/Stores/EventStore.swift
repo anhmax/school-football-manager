@@ -53,26 +53,6 @@ class EventStore: ObservableObject {
 
         events = [e1, e2, e3]
 
-        // Pre-fill registrations for event-001
-        let mockPlayers: [(name: String, status: AttendanceStatus)] = [
-            ("山田 太郎", .attending),
-            ("鈴木 健太", .attending),
-            ("田中 拓也", .attending),
-            ("佐藤 大樹", .absent),
-            ("渡辺 勇気", .notConfirmed),
-            ("伊藤 翔",   .attending),
-        ]
-        registrationsByEvent["event-001"] = mockPlayers.enumerated().map { i, p in
-            var reg = EventRegistration(
-                eventId: "event-001",
-                userId: "parent-\(i)",
-                userName: "\(p.name)の保護者",
-                playerName: p.name,
-                status: p.status
-            )
-            reg.id = UUID().uuidString
-            return reg
-        }
     }
 
     private func makeEvent(id: String, type: EventType, title: String, date: Date,
