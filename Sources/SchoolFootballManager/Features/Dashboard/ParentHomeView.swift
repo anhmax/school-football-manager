@@ -110,6 +110,9 @@ struct ParentEventDetailView: View {
     @EnvironmentObject var eventStore:   EventStore
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var playerStore:  PlayerStore
+    @EnvironmentObject var settings:     AppSettings
+
+    @StateObject private var sheets = SheetsService()
 
     let event: Event
 
@@ -200,14 +203,12 @@ struct ParentEventDetailView: View {
                                     RSVPButton(label: "参加する", icon: "checkmark.circle.fill",
                                                color: .statusSuccess,
                                                isSelected: myStatus(for: player) == .attending) {
-                                        eventStore.setStatus(.attending, playerName: player.name,
-                                                             playerId: player.id, eventId: eventId)
+                                        rsvp(.attending, player: player)
                                     }
                                     RSVPButton(label: "欠席する", icon: "xmark.circle.fill",
                                                color: .statusError,
                                                isSelected: myStatus(for: player) == .absent) {
-                                        eventStore.setStatus(.absent, playerName: player.name,
-                                                             playerId: player.id, eventId: eventId)
+                                        rsvp(.absent, player: player)
                                     }
                                 }
                             }
@@ -228,6 +229,17 @@ struct ParentEventDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             eventStore.initRegistrationsIfNeeded(eventId: eventId, players: playerStore.players)
+        }
+    }
+
+    private func rsvp(_ status: AttendanceStatus, player: Player) {
+        eventStore.setStatus(status, playerName: player.name, playerId: player.id, eventId: eventId)
+        guard settings.isSheetsConfigured else { return }
+        Task {
+            try? await sheets.update(eventTitle: currentEvent.title,
+                                     playerName: player.name,
+                                     status: status,
+                                     scriptURL: settings.sheetsScriptURL)
         }
     }
 }

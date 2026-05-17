@@ -3,6 +3,7 @@ import SwiftUI
 struct AccountManagementView: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var playerStore:  PlayerStore
+    @EnvironmentObject var settings:     AppSettings
 
     @State private var showingAdd = false
     @State private var editingAccount: Account? = nil
@@ -10,6 +11,25 @@ struct AccountManagementView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section("Google Sheets 連携") {
+                    NavigationLink {
+                        SheetsSetupView()
+                            .environmentObject(settings)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "tablecells")
+                                .foregroundColor(.footballGreen)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Sheets同期の設定")
+                                    .font(.subheadline)
+                                Text(settings.isSheetsConfigured ? "設定済み" : "未設定")
+                                    .font(.caption)
+                                    .foregroundColor(settings.isSheetsConfigured ? .statusSuccess : .secondary)
+                            }
+                        }
+                    }
+                }
                 // Manager accounts (read-only)
                 Section("監督") {
                     ForEach(accountStore.accounts.filter { $0.role == .manager }) { account in

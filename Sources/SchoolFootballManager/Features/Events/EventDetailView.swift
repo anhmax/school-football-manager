@@ -3,11 +3,15 @@ import SwiftUI
 struct EventDetailView: View {
     @EnvironmentObject var eventStore:  EventStore
     @EnvironmentObject var playerStore: PlayerStore
+    @EnvironmentObject var settings:    AppSettings
+
+    @StateObject private var sheets = SheetsService()
 
     let event: Event
 
     @State private var showingEdit = false
     @State private var showingDeleteAlert = false
+    @State private var syncError: String?
     @Environment(\.dismiss) var dismiss
 
     private var eventId: String { event.id ?? "" }
@@ -24,7 +28,6 @@ struct EventDetailView: View {
         eventStore.summary(for: eventId)
     }
 
-    // Ensure all players have a registration row
     private var allPlayerRows: [(player: Player, registration: EventRegistration?)] {
         playerStore.players.map { player in
             let reg = registrations.first { $0.playerName == player.name || $0.playerId == player.id }
@@ -40,6 +43,11 @@ struct EventDetailView: View {
                 if !currentEvent.checklist.isEmpty { checklistCard }
                 if let notes = currentEvent.notes, !notes.isEmpty { notesCard(notes) }
                 attendanceCard
+                if let err = syncError {
+                    Label(err, systemImage: "exclamationmark.triangle")
+                        .font(.caption).foregroundColor(.statusError)
+                        .padding(.horizontal, 16)
+                }
             }
             .padding(16)
         }
@@ -48,8 +56,21 @@ struct EventDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             eventStore.initRegistrationsIfNeeded(eventId: eventId, players: playerStore.players)
+            if settings.isSheetsConfigured { Task { await pullFromSheets() } }
         }
         .toolbar {
+            // Sheets sync button
+            ToolbarItem(placement: .navigationBarLeading) {
+                if settings.isSheetsConfigured {
+                    Button { Task { await pullFromSheets() } } label: {
+                        if sheets.isSyncing {
+                            ProgressView().scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                        }
+                    }
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button { showingEdit = true } label: {
@@ -72,6 +93,38 @@ struct EventDetailView: View {
                 dismiss()
             }
             Button("キャンセル", role: .cancel) {}
+        }
+    }
+
+    // MARK: - Sheets sync
+
+    private func pullFromSheets() async {
+        syncError = nil
+        do {
+            let rows = try await sheets.fetch(eventTitle: currentEvent.title,
+                                              scriptURL: settings.sheetsScriptURL)
+            for row in rows {
+                eventStore.setStatus(row.attendanceStatus,
+                                     playerName: row.playerName,
+                                     playerId: nil,
+                                     eventId: eventId)
+            }
+        } catch {
+            syncError = "Sheets同期エラー: \(error.localizedDescription)"
+        }
+    }
+
+    private func pushToSheets(playerName: String, status: AttendanceStatus) {
+        guard settings.isSheetsConfigured else { return }
+        Task {
+            do {
+                try await sheets.update(eventTitle: currentEvent.title,
+                                        playerName: playerName,
+                                        status: status,
+                                        scriptURL: settings.sheetsScriptURL)
+            } catch {
+                syncError = "Sheets書き込みエラー: \(error.localizedDescription)"
+            }
         }
     }
 
@@ -176,7 +229,14 @@ struct EventDetailView: View {
 
     var attendanceCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("参加登録", systemImage: "person.badge.clock").font(.headline)
+            HStack {
+                Label("参加登録", systemImage: "person.badge.clock").font(.headline)
+                Spacer()
+                if let time = sheets.lastSyncTime {
+                    Text("同期: \(time.formatted(date: .omitted, time: .shortened))")
+                        .font(.caption2).foregroundColor(.secondary)
+                }
+            }
 
             VStack(spacing: 0) {
                 ForEach(allPlayerRows, id: \.player.id) { row in
@@ -190,6 +250,7 @@ struct EventDetailView: View {
                             playerId: row.player.id,
                             eventId: eventId
                         )
+                        pushToSheets(playerName: row.player.name, status: newStatus)
                     }
                     Divider().padding(.leading, 58)
                 }
