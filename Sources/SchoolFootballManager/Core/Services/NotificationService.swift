@@ -165,17 +165,11 @@ class NotificationService: NSObject, ObservableObject {
 
 // MARK: - MessagingDelegate
 
-extension NotificationService: @preconcurrency MessagingDelegate {
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+extension NotificationService: MessagingDelegate {
+    nonisolated func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
-        self.fcmToken = fcmToken
-
-        // Send token to our server when it's updated
-        Task {
-            if let token = fcmToken {
-                // Update token in AuthService
-                await AuthService().updateFCMToken(token)
-            }
+        Task { @MainActor in
+            self.fcmToken = fcmToken
         }
     }
 }
