@@ -7,14 +7,25 @@ struct SheetImportView: View {
 
     @StateObject private var sheets = SheetsService()
 
+    // Sheet selection
     @State private var sheetNames: [String] = []
+    @State private var showManualInput = false   // fallback when getSheetNames unavailable
+    @State private var manualInput = "5月"
     @State private var selectedSheet: String? = nil
+    @State private var loadingNames = false
+    @State private var namesError: String? = nil
+
+    // Event loading
     @State private var fetchedEvents: [SheetEvent] = []
     @State private var selectedDates: Set<String> = []
-    @State private var loadingNames = false
     @State private var loadingEvents = false
-    @State private var namesError: String?
-    @State private var eventsError: String?
+    @State private var eventsError: String? = nil
+
+    private var activeSheet: String {
+        showManualInput
+            ? manualInput.trimmingCharacters(in: .whitespaces)
+            : (selectedSheet ?? "")
+    }
 
     var body: some View {
         NavigationStack {
@@ -22,7 +33,7 @@ struct SheetImportView: View {
                 if !settings.isSheetsConfigured {
                     notConfiguredView
                 } else {
-                    mainContent
+                    mainForm
                 }
             }
             .navigationTitle("Sheetsからインポート")
@@ -34,10 +45,6 @@ struct SheetImportView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if loadingNames || loadingEvents {
                         ProgressView().scaleEffect(0.8)
-                    } else {
-                        Button { Task { await loadSheetNames() } } label: {
-                            Image(systemName: "arrow.clockwise")
-                        }
                     }
                 }
             }
@@ -63,111 +70,146 @@ struct SheetImportView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    // MARK: - Main content
+    // MARK: - Main form
 
-    var mainContent: some View {
+    var mainForm: some View {
         Form {
-            // Sheet list section
+            sheetPickerSection
+            if !activeSheet.isEmpty && (selectedSheet != nil || showManualInput) {
+                loadEventsButton
+            }
+            if loadingEvents {
+                Section { HStack { ProgressView().scaleEffect(0.8); Text("読み込み中...").foregroundColor(.secondary) } }
+            }
+            if let err = eventsError {
+                errorSection(err, label: "イベントの読み込みに失敗しました")
+            }
+            if !fetchedEvents.isEmpty {
+                eventsSection
+            }
+            if !selectedDates.isEmpty {
+                importButton
+            }
+        }
+    }
+
+    // MARK: - Sheet picker section
+
+    @ViewBuilder
+    var sheetPickerSection: some View {
+        if loadingNames {
+            Section("シートを選択") {
+                HStack {
+                    ProgressView().scaleEffect(0.8)
+                    Text("シート一覧を取得中...").foregroundColor(.secondary)
+                }
+            }
+        } else if showManualInput {
             Section {
-                if loadingNames {
-                    HStack {
-                        ProgressView().scaleEffect(0.8)
-                        Text("シート一覧を取得中...")
-                            .foregroundColor(.secondary)
-                    }
-                } else if let err = namesError {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Label("シート一覧の取得に失敗しました", systemImage: "xmark.circle")
-                            .font(.subheadline.bold()).foregroundColor(.statusError)
-                        Text(err).font(.caption).foregroundColor(.statusError)
-                        Button("再試行") { Task { await loadSheetNames() } }
-                            .font(.caption)
-                    }
-                } else {
-                    ForEach(sheetNames, id: \.self) { name in
-                        Button {
-                            if selectedSheet != name {
-                                selectedSheet = name
-                                fetchedEvents = []
-                                selectedDates = []
-                                eventsError = nil
-                                Task { await loadEvents(for: name) }
-                            }
-                        } label: {
-                            HStack {
-                                Image(systemName: "tablecells")
-                                    .foregroundColor(.footballGreen)
-                                    .frame(width: 24)
-                                Text(name)
-                                    .foregroundColor(.primary)
-                                Spacer()
-                                if selectedSheet == name {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.footballGreen)
-                                        .fontWeight(.semibold)
-                                }
-                            }
-                        }
+                HStack {
+                    Text("シート名")
+                    Spacer()
+                    TextField("例: 5月", text: $manualInput)
+                        .multilineTextAlignment(.trailing)
+                        .autocorrectionDisabled()
+                        .onChange(of: manualInput) { _ in clearEvents() }
+                }
+                if !sheetNames.isEmpty {
+                    Button { showManualInput = false } label: {
+                        Label("シート一覧から選ぶ", systemImage: "list.bullet")
+                            .font(.subheadline)
                     }
                 }
             } header: {
                 Text("シートを選択")
             } footer: {
-                if sheetNames.isEmpty && !loadingNames && namesError == nil {
-                    Text("シートが見つかりませんでした")
+                if let err = namesError {
+                    Text("シート一覧取得エラー: \(err)")
+                        .foregroundColor(.statusError)
+                } else {
+                    Text("スプレッドシートのタブ名を正確に入力してください")
                 }
             }
-
-            // Events section (shown after a sheet is selected)
-            if let sheet = selectedSheet {
-                Section {
-                    if loadingEvents {
+        } else {
+            Section("シートを選択") {
+                ForEach(sheetNames, id: \.self) { name in
+                    Button {
+                        if selectedSheet != name {
+                            selectedSheet = name
+                            clearEvents()
+                        }
+                    } label: {
                         HStack {
-                            ProgressView().scaleEffect(0.8)
-                            Text("イベントを読み込み中...")
-                                .foregroundColor(.secondary)
-                        }
-                    } else if let err = eventsError {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Label("読み込みに失敗しました", systemImage: "xmark.circle")
-                                .font(.subheadline.bold()).foregroundColor(.statusError)
-                            Text(err).font(.caption).foregroundColor(.statusError)
-                        }
-                    } else if fetchedEvents.isEmpty {
-                        Text("イベントが見つかりませんでした")
-                            .foregroundColor(.secondary)
-                    } else {
-                        ForEach(fetchedEvents) { event in
-                            importRow(for: event, sheet: sheet)
-                        }
-                    }
-                } header: {
-                    HStack {
-                        Text("\(sheet) のイベント")
-                        Spacer()
-                        if !fetchedEvents.isEmpty {
-                            Button(selectedDates.count == availableCount ? "全解除" : "全選択") {
-                                toggleSelectAll(sheet: sheet)
+                            Image(systemName: "tablecells").foregroundColor(.footballGreen).frame(width: 24)
+                            Text(name).foregroundColor(.primary)
+                            Spacer()
+                            if selectedSheet == name {
+                                Image(systemName: "checkmark").foregroundColor(.footballGreen).fontWeight(.semibold)
                             }
-                            .font(.caption)
                         }
                     }
                 }
+                Button { showManualInput = true } label: {
+                    Label("手動で入力する", systemImage: "keyboard")
+                        .font(.subheadline).foregroundColor(.secondary)
+                }
+            }
+        }
+    }
 
-                if !selectedDates.isEmpty {
-                    Section {
-                        Button {
-                            importSelected(sheet: sheet)
-                            dismiss()
-                        } label: {
-                            Label("\(selectedDates.count)件をインポート",
-                                  systemImage: "square.and.arrow.down")
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(.white)
-                        }
-                        .listRowBackground(Color.footballGreen)
-                    }
+    // MARK: - Load events button
+
+    var loadEventsButton: some View {
+        Section {
+            Button { Task { await loadEvents() } } label: {
+                Label("\(activeSheet) のイベントを読み込む", systemImage: "arrow.down.doc")
+            }
+            .disabled(loadingEvents || activeSheet.isEmpty)
+        }
+    }
+
+    // MARK: - Events section
+
+    var eventsSection: some View {
+        Section {
+            ForEach(fetchedEvents) { event in
+                importRow(for: event)
+            }
+        } header: {
+            HStack {
+                Text("\(activeSheet) のイベント")
+                Spacer()
+                Button(selectedDates.count == availableCount ? "全解除" : "全選択") {
+                    toggleSelectAll()
                 }
+                .font(.caption)
+            }
+        }
+    }
+
+    // MARK: - Import button
+
+    var importButton: some View {
+        Section {
+            Button { importSelected(); dismiss() } label: {
+                Label("\(selectedDates.count)件をインポート", systemImage: "square.and.arrow.down")
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+            }
+            .listRowBackground(Color.footballGreen)
+        }
+    }
+
+    // MARK: - Error section
+
+    func errorSection(_ message: String, label: String) -> some View {
+        Section {
+            VStack(alignment: .leading, spacing: 6) {
+                Label(label, systemImage: "xmark.circle")
+                    .font(.subheadline.bold()).foregroundColor(.statusError)
+                Text(message)
+                    .font(.caption).foregroundColor(.statusError)
+                    .textSelection(.enabled)
             }
         }
     }
@@ -175,8 +217,8 @@ struct SheetImportView: View {
     // MARK: - Import row
 
     @ViewBuilder
-    private func importRow(for event: SheetEvent, sheet: String) -> some View {
-        let imported = alreadyImported(event, sheet: sheet)
+    private func importRow(for event: SheetEvent) -> some View {
+        let imported = alreadyImported(event)
         HStack(spacing: 12) {
             Image(systemName: imported || selectedDates.contains(event.sheetDate)
                   ? "checkmark.circle.fill" : "circle")
@@ -185,7 +227,6 @@ struct SheetImportView: View {
                     : selectedDates.contains(event.sheetDate) ? .footballGreen : .secondary
                 )
                 .font(.system(size: 20))
-
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text("\(event.sheetDate)(\(event.dayOfWeek))")
@@ -205,18 +246,13 @@ struct SheetImportView: View {
                 }
             }
             Spacer()
-            if imported {
-                Text("済み").font(.caption2).foregroundColor(.secondary)
-            }
+            if imported { Text("済み").font(.caption2).foregroundColor(.secondary) }
         }
         .contentShape(Rectangle())
         .onTapGesture {
             guard !imported else { return }
-            if selectedDates.contains(event.sheetDate) {
-                selectedDates.remove(event.sheetDate)
-            } else {
-                selectedDates.insert(event.sheetDate)
-            }
+            if selectedDates.contains(event.sheetDate) { selectedDates.remove(event.sheetDate) }
+            else { selectedDates.insert(event.sheetDate) }
         }
         .opacity(imported ? 0.5 : 1.0)
     }
@@ -224,21 +260,22 @@ struct SheetImportView: View {
     // MARK: - Helpers
 
     private var availableCount: Int {
-        guard let sheet = selectedSheet else { return 0 }
-        return fetchedEvents.filter { !alreadyImported($0, sheet: sheet) }.count
+        fetchedEvents.filter { !alreadyImported($0) }.count
     }
 
-    private func alreadyImported(_ e: SheetEvent, sheet: String) -> Bool {
-        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == sheet }
+    private func alreadyImported(_ e: SheetEvent) -> Bool {
+        eventStore.events.contains { $0.sheetDate == e.sheetDate && $0.sheetMonth == activeSheet }
     }
 
-    private func toggleSelectAll(sheet: String) {
-        let available = fetchedEvents.filter { !alreadyImported($0, sheet: sheet) }.map { $0.sheetDate }
-        if selectedDates.count == available.count {
-            selectedDates = []
-        } else {
-            selectedDates = Set(available)
-        }
+    private func toggleSelectAll() {
+        let available = fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate }
+        selectedDates = selectedDates.count == available.count ? [] : Set(available)
+    }
+
+    private func clearEvents() {
+        fetchedEvents = []
+        selectedDates = []
+        eventsError = nil
     }
 
     // MARK: - Async loaders
@@ -249,19 +286,24 @@ struct SheetImportView: View {
         defer { loadingNames = false }
         do {
             sheetNames = try await sheets.fetchSheetNames(scriptURL: settings.sheetsScriptURL)
+            showManualInput = sheetNames.isEmpty
+        } catch SheetsError.serverError(let msg) where msg.lowercased().contains("unknown action") {
+            // Old script without getSheetNames → silently fall back to text input
+            showManualInput = true
         } catch {
             namesError = error.localizedDescription
+            showManualInput = true
         }
     }
 
-    private func loadEvents(for sheet: String) async {
+    private func loadEvents() async {
         loadingEvents = true
         eventsError = nil
         defer { loadingEvents = false }
         do {
-            fetchedEvents = try await sheets.fetchEvents(month: sheet,
+            fetchedEvents = try await sheets.fetchEvents(month: activeSheet,
                                                          scriptURL: settings.sheetsScriptURL)
-            selectedDates = Set(fetchedEvents.filter { !alreadyImported($0, sheet: sheet) }.map { $0.sheetDate })
+            selectedDates = Set(fetchedEvents.filter { !alreadyImported($0) }.map { $0.sheetDate })
         } catch {
             eventsError = error.localizedDescription
         }
@@ -269,7 +311,7 @@ struct SheetImportView: View {
 
     // MARK: - Import
 
-    private func importSelected(sheet: String) {
+    private func importSelected() {
         for sheetEvent in fetchedEvents where selectedDates.contains(sheetEvent.sheetDate) {
             guard let date = sheetEvent.date(year: 2026) else { continue }
             var event = Event(
@@ -282,10 +324,8 @@ struct SheetImportView: View {
                 createdBy: EventStore.managerId
             )
             event.sheetDate = sheetEvent.sheetDate
-            event.sheetMonth = sheet
-            if !sheetEvent.meetingPlace.isEmpty {
-                event.meetingPoint = sheetEvent.meetingPlace
-            }
+            event.sheetMonth = activeSheet
+            if !sheetEvent.meetingPlace.isEmpty { event.meetingPoint = sheetEvent.meetingPlace }
             event.departureTime = parseTime(sheetEvent.meetingTime, on: date)
                 ?? parseTime(sheetEvent.localMeetingTime, on: date)
             eventStore.add(event)
