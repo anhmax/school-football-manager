@@ -37,7 +37,7 @@ struct AdminDashboardView: View {
                 .tabItem {
                     Label("ユーザー管理", systemImage: "person.badge.key")
                 }
-                .badge(pendingUsersCount > 0 ? pendingUsersCount : (nil as Int?))
+                .badge(pendingUsersCount)
                 .tag(3)
 
             // Settings

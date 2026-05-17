@@ -122,28 +122,28 @@ class NotificationService: NSObject, ObservableObject {
     // MARK: - Push Notification Topics
 
     func subscribeToTeamTopic(_ teamId: String) async {
-        await messaging.subscribe(toTopic: "team_\(teamId)")
-        print("Subscribed to team topic: team_\(teamId)")
+        do { try await messaging.subscribe(toTopic: "team_\(teamId)") }
+        catch { print("Topic subscribe error: \(error)") }
     }
 
     func unsubscribeFromTeamTopic(_ teamId: String) async {
-        await messaging.unsubscribe(fromTopic: "team_\(teamId)")
-        print("Unsubscribed from team topic: team_\(teamId)")
+        do { try await messaging.unsubscribe(fromTopic: "team_\(teamId)") }
+        catch { print("Topic unsubscribe error: \(error)") }
     }
 
     func subscribeToRoleTopic(_ role: UserRole) async {
-        await messaging.subscribe(toTopic: "role_\(role.rawValue)")
-        print("Subscribed to role topic: role_\(role.rawValue)")
+        do { try await messaging.subscribe(toTopic: "role_\(role.rawValue)") }
+        catch { print("Topic subscribe error: \(error)") }
     }
 
     func unsubscribeFromRoleTopic(_ role: UserRole) async {
-        await messaging.unsubscribe(fromTopic: "role_\(role.rawValue)")
-        print("Unsubscribed from role topic: role_\(role.rawValue)")
+        do { try await messaging.unsubscribe(fromTopic: "role_\(role.rawValue)") }
+        catch { print("Topic unsubscribe error: \(error)") }
     }
 
     func subscribeToGeneralTopic() async {
-        await messaging.subscribe(toTopic: "general")
-        print("Subscribed to general topic")
+        do { try await messaging.subscribe(toTopic: "general") }
+        catch { print("Topic subscribe error: \(error)") }
     }
 
     // MARK: - Utility Methods
